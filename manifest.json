@@ -1,0 +1,11 @@
+{
+  "name": "Butterfly",
+  "id": "1046106377087666849",
+  "api": "1.0.0",
+  "main": "code.js",
+  "editorType": [
+    "figma",
+    "figjam"
+  ],
+  "ui": "ui.html"
+}
