@@ -1,3 +1,4 @@
+import Version from './lib/version.js'
 // This file holds the main code for the plugin. It has access to the *document*.
 // You can access browser APIs such as the network by creating a UI which contains
 // a full browser environment (see documentation).
