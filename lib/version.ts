@@ -1,11 +1,15 @@
-interface VersionObject {
+export interface VersionObject {
 	major: number;
 	minor: number;
 	patch: number;
 	rfc?: number;
 }
 
-export default class Version implements VersionObject {
+function isVersion(object: any): object is Version {
+	return true;
+}
+
+export default class Version {
 	public static levels: string[] = ['major', 'minor', 'patch', 'rfc'];
 
 	major: number;
@@ -13,9 +17,21 @@ export default class Version implements VersionObject {
 	patch: number;
 	rfc?: number;
 
-	constructor(version?: VersionObject | Version, useRfc?: boolean) {
+	constructor(version?: VersionObject | Version | string, useRfc?: boolean) {
 		let newVersion: VersionObject;
-		if (version instanceof Version) {
+
+		if (typeof version === 'string') {
+			const [major, minor, patch, rfc]
+				= version.split(/\.|-rfc\./)
+					.map(level => level ? Number.parseInt(level, 10) : undefined);
+
+			newVersion = {
+				major,
+				minor,
+				patch,
+				rfc,
+			};
+		} else if (isVersion(version)) {
 			newVersion = version.toObject();
 		} else if (typeof version === 'object') {
 			newVersion = version;
@@ -32,19 +48,6 @@ export default class Version implements VersionObject {
 		this.minor = newVersion.minor;
 		this.patch = newVersion.patch;
 		this.rfc = newVersion.rfc;
-	}
-
-	fromString(version: string): Version {
-		const [major, minor, patch, rfc]
-			= version.split(/\.|-rfc\./)
-				.map(level => level ? Number.parseInt(level, 10) : undefined);
-
-		return new Version({
-			major,
-			minor,
-			patch,
-			rfc,
-		});
 	}
 
 	toString(): string {
@@ -64,7 +67,7 @@ export default class Version implements VersionObject {
 		const newRfc: number | undefined = isRfc && useRfc ? undefined : 1;
 		const baseVersion: VersionObject = this.toObject();
 
-		return [
+		const options: VersionObject[] = [
 			{
 				major: baseVersion.major + 1,
 				minor: 0,
@@ -83,5 +86,24 @@ export default class Version implements VersionObject {
 				rfc: newRfc,
 			},
 		];
+
+		if (useRfc && isRfc) {
+			options.push({
+				...baseVersion,
+				rfc: baseVersion.rfc + 1,
+			});
+		}
+
+		return options;
+	}
+
+	elevatedLevel(otherVersion: Version): string | void {
+		for (const level of Version.levels) {
+			if (this[level] !== otherVersion[level]) {
+				return level;
+			}
+		}
+
+		return undefined;
 	}
 }
