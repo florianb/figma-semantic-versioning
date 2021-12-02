@@ -4,16 +4,15 @@
   "description": "Your Figma plugin",
   "main": "code.js",
   "scripts": {
-    "lint-watch": "watchexec -i dist npm run lint",
+    "watch": "watchexec -i dist 'npm run lint && npm run build && reset'",
     "lint": "tsc -noEmit -p tsconfig.json && xo **/*.ts",
-    "build": "esbuild code.ts ui.ts --bundle --outdir=dist",
-    "watch": "esbuild code.ts ui.ts --watch --bundle --outdir=dist"
+    "build": "esbuild code.ts ui.ts --bundle --outdir=dist"
   },
   "author": "",
   "license": "",
   "devDependencies": {
     "@figma/plugin-typings": "^1.39.1",
-    "alpinejs": "^3.5.2",
+    "alpinejs": "^3.7.0",
     "ava": "^3.15.0",
     "esbuild": "^0.14.0",
     "typescript": "^4.5.2",
