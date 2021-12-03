@@ -4,17 +4,22 @@
   "description": "Your Figma plugin",
   "main": "code.js",
   "scripts": {
-    "watch": "watchexec -i dist 'npm run lint && npm run build && reset'",
+    "watch": "watchexec -i dist 'npm run lint && npm run build'",
     "lint": "tsc -noEmit -p tsconfig.json && xo **/*.ts",
-    "build": "esbuild code.ts ui.ts --bundle --outdir=dist"
+    "build": "tailwindcss --input=tailwind.css --output=dist/ui.css --postcss && node build.js"
   },
   "author": "",
   "license": "",
   "devDependencies": {
+    "@chialab/esbuild-plugin-html": "^0.12.31",
     "@figma/plugin-typings": "^1.39.1",
     "alpinejs": "^3.7.0",
+    "autoprefixer": "^10.4.0",
     "ava": "^3.15.0",
     "esbuild": "^0.14.0",
+    "esbuild-plugin-postcss2": "^0.1.1",
+    "postcss": "^8.4.4",
+    "tailwindcss": "^2.2.19",
     "typescript": "^4.5.2",
     "xo": "^0.47.0"
   }

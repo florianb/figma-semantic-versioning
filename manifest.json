@@ -4,8 +4,8 @@
   "api": "1.0.0",
   "main": "dist/code.js",
   "editorType": [
-    "figma",
-    "figjam"
+    "figma"
   ],
-  "ui": "ui.html"
+  "ui": "ui.html",
+  "permissions": ["currentuser"]
 }
