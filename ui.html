@@ -2,32 +2,9 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<link rel="stylesheet" href="style.css">
 		<script src="dist/ui.js"></script>
-		<style>
-<!--style-->
-		</style>
 	</head>
 	<body>
-		<div class="md:container md:mx-auto bg-gradient-to-b from-purple-200 via-ping-300 to-red-300">
-			test
-		</div>
-		<!-- page content -->
-		<h2>Shape Creator</h2>
-		<p>Count: <input id="count" type="number" value="5"></p>
-		<button id="create">Create</button>
-		<button id="cancel">Cancel</button>
-		<script>
-		document.getElementById('create').onclick = () => {
-			const textbox = document.getElementById('count');
-			const count = parseInt(textbox.value, 10);
-			parent.postMessage({ pluginMessage: { type: 'create-shapes', count } }, '*')
-		}
-
-		document.getElementById('cancel').onclick = () => {
-			parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
-		}
-		</script>
 	</body>
 </html>
 

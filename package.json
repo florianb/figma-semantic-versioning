@@ -6,20 +6,22 @@
   "scripts": {
     "watch": "watchexec -i dist 'npm run lint && npm run build'",
     "lint": "tsc -noEmit -p tsconfig.json && xo **/*.ts",
-    "build": "tailwindcss --input=tailwind.css --output=dist/ui.css --postcss && node build.js"
+    "build": "node build.js"
   },
   "author": "",
   "license": "",
   "devDependencies": {
     "@chialab/esbuild-plugin-html": "^0.12.31",
-    "@figma/plugin-typings": "^1.39.1",
+    "@figma/plugin-typings": "^1.40",
     "alpinejs": "^3.7.0",
     "autoprefixer": "^10.4.0",
     "ava": "^3.15.0",
     "esbuild": "^0.14.0",
     "esbuild-plugin-postcss2": "^0.1.1",
+    "esbuild-svelte": "^0.6.0",
+    "eslint-plugin-svelte3": "^3.2.1",
     "postcss": "^8.4.4",
-    "tailwindcss": "^2.2.19",
+    "svelte-preprocess": "^4.10.0",
     "typescript": "^4.5.2",
     "xo": "^0.47.0"
   }

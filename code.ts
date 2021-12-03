@@ -28,11 +28,31 @@ function deriveActions(node: BaseNode, version?: Version, useRfc?: boolean): Act
 	return actions;
 }
 
+figma.ui.onmessage = message => {
+	//console.log(message);
+};
+
 if (figma.editorType === 'figma') {
 	const page = figma.currentPage;
 	const user = figma.currentUser;
 	const selection = page.selection;
-	const useRfc = Plugin.config('useRfcWorkflow') as boolean;
 
-	figma.showUI(ui);
+	if (selection.length >= 1) {
+		if (selection.length === 1) {
+			const useRfc = Plugin.config('useRfcWorkflow') as boolean;
+		} else {
+			const selectedNodes = selection.map(node => {
+				const versionValue = Plugin.node(node, 'version');
+				const version = versionValue ? new Version(versionValue) : null;
+
+				return {
+					id: node.id,
+					name: node.name,
+					version
+				};
+			});
+		}
+
+		figma.showUI(ui);
+	}
 }
