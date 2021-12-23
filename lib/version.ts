@@ -1,3 +1,5 @@
+/* eslint @typescript-eslint/no-unnecessary-type-assertion: "off" */
+
 export interface VersionObject {
 	major: number;
 	minor: number;
@@ -6,6 +8,18 @@ export interface VersionObject {
 }
 
 function isVersion(object: any): object is Version {
+	const properties = ['major', 'minor', 'patch', 'rfc'];
+
+	if (object === undefined) {
+		return false;
+	}
+
+	for (const prop of properties) {
+		if (!(prop in object)) {
+			return false;
+		}
+	}
+
 	return true;
 }
 
@@ -32,7 +46,7 @@ export default class Version {
 				rfc,
 			};
 		} else if (isVersion(version)) {
-			newVersion = version.toObject();
+			newVersion = (version as Version).toObject();
 		} else if (typeof version === 'object') {
 			newVersion = version;
 		} else {

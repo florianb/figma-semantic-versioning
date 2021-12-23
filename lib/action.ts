@@ -1,6 +1,18 @@
 import Version from './version.js';
 
 function isAction(object: any): object is Action {
+	const properties = ['version', 'nodeId', 'label'];
+
+	if (object === undefined) {
+		return false;
+	}
+
+	for (const prop of properties) {
+		if (!(prop in object)) {
+			return false;
+		}
+	}
+
 	return true;
 }
 

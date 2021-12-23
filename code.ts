@@ -2,12 +2,12 @@ import Action, {ActionObject} from './lib/action.js';
 import Version from './lib/version.js';
 import Plugin from './lib/plugin.js';
 
-// @ts-ignore
+// @ts-expect-error: TS2307
 import ui from './ui.html';
 
 function deriveActions(node: BaseNode, version?: Version, useRfc?: boolean): ActionObject[] {
 	const actions: ActionObject[] = [{
-		version: version ? null : version.toString(),
+		version: version ? version.toString() : null,
 		label: 'keep',
 	}];
 
@@ -19,17 +19,22 @@ function deriveActions(node: BaseNode, version?: Version, useRfc?: boolean): Act
 					const newVersion = new Version(versionObject);
 					const label = version.elevatedLevel(newVersion) || 'keep';
 
-					return (new Action(node, newVersion, label)).toObject()
+					return (new Action(node, newVersion, label)).toObject();
 				});
 
 		actions.push(...options);
+	} else {
+		const initialVersion = new Version(undefined, useRfc);
+		const action = new Action(node, initialVersion, 'initial');
+		
+		actions.push(action.toObject());
 	}
 
 	return actions;
 }
 
 figma.ui.onmessage = message => {
-	//console.log(message);
+	console.log('code:', message);
 };
 
 if (figma.editorType === 'figma') {
@@ -37,22 +42,41 @@ if (figma.editorType === 'figma') {
 	const user = figma.currentUser;
 	const selection = page.selection;
 
-	if (selection.length >= 1) {
+	if (selection.length > 0) {
+		let message = null;
+
 		if (selection.length === 1) {
 			const useRfc = Plugin.config('useRfcWorkflow') as boolean;
+			const node = selection[0];
+			const version = Plugin.version(node);
+
+			const actions = deriveActions(node, version, useRfc);
+
+			message = {
+				type: 'actions',
+				actions,
+			};
 		} else {
 			const selectedNodes = selection.map(node => {
-				const versionValue = Plugin.node(node, 'version');
+				const versionValue = Plugin.node(node, 'version') as string | undefined;
 				const version = versionValue ? new Version(versionValue) : null;
 
 				return {
 					id: node.id,
 					name: node.name,
-					version
+					version,
 				};
 			});
+
+			message = {
+				type: 'list',
+				selectedNodes,
+			};
 		}
 
 		figma.showUI(ui);
+		figma.ui.postMessage(message);
+	} else {
+		figma.closePlugin('Butterfly requires selected Nodes.');
 	}
 }
