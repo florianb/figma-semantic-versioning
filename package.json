@@ -2,7 +2,7 @@
   "name": "Butterfly",
   "version": "1.0.0",
   "description": "Your Figma plugin",
-  "main": "code.js",
+  "main": "dist/code.js",
   "scripts": {
     "watch": "watchexec -i dist 'npm run lint && npm run build'",
     "lint": "tsc -noEmit -p tsconfig.json && xo **/*.ts",

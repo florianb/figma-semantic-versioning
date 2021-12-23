@@ -1,14 +1,14 @@
-import Action, {ActionObject} from './lib/action.js'
-import Version from './lib/version.js'
-import Plugin from './lib/plugin.js'
+import Action, {ActionObject} from './lib/action.js';
+import Version from './lib/version.js';
+import Plugin from './lib/plugin.js';
 
 // @ts-ignore
-import ui from './ui.html'
+import ui from './ui.html';
 
 function deriveActions(node: BaseNode, version?: Version, useRfc?: boolean): ActionObject[] {
 	const actions: ActionObject[] = [{
 		version: version ? null : version.toString(),
-		label: 'keep'
+		label: 'keep',
 	}];
 
 	if (version) {

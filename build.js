@@ -80,7 +80,22 @@ const sveltePreprocess = require('svelte-preprocess');
 require('esbuild')
 	.build({
 		logLevel: 'info',
-		entryPoints: ['code.ts', 'ui.js'],
+		entryPoints: ['lib/ui.js'],
+		bundle: true,
+		outdir: 'dist/',
+		platform: 'browser',
+		plugins: [
+			esbuildSvelte({
+				preprocess: sveltePreprocess
+			}),
+		]
+	})
+	.catch(() => process.exit(1));
+
+require('esbuild')
+	.build({
+		logLevel: 'info',
+		entryPoints: ['code.ts'],
 		bundle: true,
 		outdir: 'dist/',
 		platform: 'neutral',
@@ -88,10 +103,8 @@ require('esbuild')
 			'.html': 'text'
 		},
 		plugins: [
-			esbuildSvelte({
-				preprocess: sveltePreprocess
-			}),
 			inlineStylePlugin
 		]
 	})
 	.catch(() => process.exit(1));
+

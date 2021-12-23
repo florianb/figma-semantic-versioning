@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "lib": ["es6"],
+    "skipLibCheck": true,
+    "lib": [
+      "es6"
+    ],
     "moduleResolution": "node",
     "typeRoots": [
       "./node_modules/@types",
