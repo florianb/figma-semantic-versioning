@@ -54,7 +54,7 @@ if (figma.editorType === 'figma') {
 
 			message = {
 				type: 'actions',
-				actions,
+				data: actions,
 			};
 		} else {
 			const selectedNodes = selection.map(node => {
@@ -70,7 +70,7 @@ if (figma.editorType === 'figma') {
 
 			message = {
 				type: 'list',
-				selectedNodes,
+				data: selectedNodes,
 			};
 		}
 

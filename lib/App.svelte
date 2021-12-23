@@ -1,11 +1,25 @@
-<h1>
-Hallo Welt
-</h1>
+<p>
+	{ type }<br>
+
+	{ data === null ? 'Keine' : data.length } Daten-Elemente
+	{#if type === 'list'}
+		<NodeList nodes={data}/>
+	{/if}
+</p>
 
 <script>
+	import NodeList from './NodeList.svelte';
+
+	let type = 'loading';
+	let data = null;
+
 	window.onmessage = (event) => {
 			const message = event.data.pluginMessage;
 
-			console.log(message);
+			type = message.type;
+			data = message.data;
+
+			console.log(data);
 		}
 </script>
+
