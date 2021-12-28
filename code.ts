@@ -34,7 +34,27 @@ function deriveActions(node: BaseNode, version?: Version, useRfc?: boolean): Act
 }
 
 figma.ui.onmessage = message => {
-	console.log('code:', message);
+	console.log('message:', message);
+
+	switch (message.type) {
+		case 'settings':
+			const settings = {
+				useRfc: (Plugin.config('useRfcWorkflow') as boolean) || false,
+			};
+
+			console.log('setting', settings);
+			figma.ui.postMessage({
+				type: 'settings',
+				settings,
+			});
+
+			break;
+		case 'updateSettings':
+			Plugin.config('useRfcWorkflow', message.settings.useRfc);
+
+			break;
+		default:
+	}
 };
 
 if (figma.editorType === 'figma') {
