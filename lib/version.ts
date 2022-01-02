@@ -8,19 +8,7 @@ export interface VersionObject {
 }
 
 function isVersion(object: any): object is Version {
-	const properties = ['major', 'minor', 'patch', 'rfc'];
-
-	if (object === undefined) {
-		return false;
-	}
-
-	for (const prop of properties) {
-		if (!(prop in object)) {
-			return false;
-		}
-	}
-
-	return true;
+	return object instanceof Version;
 }
 
 export default class Version {
@@ -33,6 +21,8 @@ export default class Version {
 
 	constructor(version?: VersionObject | Version | string, useRfc?: boolean) {
 		let newVersion: VersionObject;
+
+		console.log(version);
 
 		if (typeof version === 'string') {
 			const [major, minor, patch, rfc]
@@ -77,8 +67,7 @@ export default class Version {
 	}
 
 	deriveOptions(useRfc: boolean): VersionObject[] {
-		const isRfc: boolean = this.rfc !== undefined;
-		const newRfc: number | undefined = isRfc && useRfc ? undefined : 1;
+		const newRfc: number | undefined = useRfc ? 1 : undefined;
 		const baseVersion: VersionObject = this.toObject();
 
 		const options: VersionObject[] = [
@@ -101,7 +90,7 @@ export default class Version {
 			},
 		];
 
-		if (useRfc && isRfc) {
+		if (useRfc && baseVersion.rfc) {
 			options.push({
 				...baseVersion,
 				rfc: baseVersion.rfc + 1,

@@ -1,9 +1,3 @@
-<p>
-	{ type }<br>
-
-	{ data === null ? 'Keine' : data.length } Daten-Elemente
-</p>
-
 {#if type === 'list'}
 	<NodeList nodes={data}/>
 {:else if type === 'actions'}

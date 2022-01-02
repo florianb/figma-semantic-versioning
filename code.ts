@@ -14,23 +14,32 @@ function deriveActions(node: BaseNode, version?: Version, useRfc?: boolean): Act
 	if (version) {
 		const options
 			= version
-				.deriveOptions(useRfc)
+				.deriveOptions(useRfc === true)
 				.map(versionObject => {
 					const newVersion = new Version(versionObject);
 					const label = version.elevatedLevel(newVersion) || 'keep';
+					const action = new Action(node, newVersion, label);
 
-					return (new Action(node, newVersion, label)).toObject();
+					return action.toObject();
 				});
 
 		actions.push(...options);
 	} else {
-		const initialVersion = new Version(undefined, useRfc);
+		const initialVersion = new Version(undefined, useRfc === true);
 		const action = new Action(node, initialVersion, 'initial');
 		
 		actions.push(action.toObject());
 	}
 
 	return actions;
+}
+
+function updateVersionInName(node: BaseNode, version?: Version): void {
+	const name = node.name;
+
+	if (version === undefined) {
+	} else {
+	}
 }
 
 figma.ui.onmessage = message => {
@@ -40,6 +49,7 @@ figma.ui.onmessage = message => {
 		case 'settings':
 			const settings = {
 				useRfc: (Plugin.config('useRfcWorkflow') as boolean) || false,
+				// updateName: (Plugin.config('updateName') as boolean) || false,
 			};
 
 			console.log('setting', settings);
@@ -51,13 +61,22 @@ figma.ui.onmessage = message => {
 			break;
 		case 'updateSettings':
 			Plugin.config('useRfcWorkflow', message.settings.useRfc);
-
+			Plugin.config('updateName', message.settings.updateName);
+			updateUi();
+			break;
+		case 'updateVersion':
+			const action = message.action
+			const node = figma.getNodeById(action.nodeId);
+			const updateName = Plugin.config('updateName', message.settings.updateName) || false;
+			const version = new Version(action.version);
+			Plugin.version(node, version);
+			updateUi();
 			break;
 		default:
 	}
 };
 
-if (figma.editorType === 'figma') {
+function updateUi() {
 	const page = figma.currentPage;
 	const user = figma.currentUser;
 	const selection = page.selection;
@@ -79,7 +98,7 @@ if (figma.editorType === 'figma') {
 		} else {
 			const selectedNodes = selection.map(node => {
 				const versionValue = Plugin.node(node, 'version') as string | undefined;
-				const version = versionValue ? new Version(versionValue) : null;
+				const version = versionValue ? (new Version(versionValue)).toString() : null;
 
 				return {
 					id: node.id,
@@ -94,9 +113,15 @@ if (figma.editorType === 'figma') {
 			};
 		}
 
-		figma.showUI(ui);
 		figma.ui.postMessage(message);
 	} else {
 		figma.closePlugin('Butterfly requires selected Nodes.');
 	}
+}
+
+if (figma.editorType === 'figma') {
+	figma.showUI(ui);
+	updateUi();
+} else {
+	figma.closePlugin('Butterfly is currently only running in classic Figma.');
 }
