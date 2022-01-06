@@ -1,6 +1,6 @@
 # Figma Semantic Versioning
 
-Simplified [Semantic Versioning][semver] for your Figma Nodes, consumable per API.
+Simplified [Semantic Versioning][semver] for your Figma Nodes without external dependencies and consumable via API.
 
 ## Introduction
 
@@ -9,6 +9,8 @@ Usually the design work is embedded in a wholesome work process where any design
 The version number might be used to indicate the expected backend work triggered by the current design changes.
 
 And it also allows you to reference the version in other tools and assets like issue trackers and documentation.
+
+This plugin has **no** external dependencies, the version information is saved in the current document.
 
 >> Be aware the meaning of the word "backed" depends highly on your project setup. In a progressive web app the "backend" is usually a front-end implementation whereas backend in a classical server-based webpage will be the actual server-side webapp implementation.
 
@@ -69,6 +71,7 @@ Your team then discusses your draft and gives you some feedback which requires c
 ## How to use the Settings?
 
 The settings are saved per document. That said you will have to adjust the settings once per document.
+
 ### Use "request for comments"
 
 Checking this option enables a "pre-release" path for your versioning which adds the `-rfc.<<number>>` counter to the version. Using this feature allows you to mark your changes as a "proposal" depending on the workflow your design work is embedded in.
@@ -87,7 +90,7 @@ Unchecking this option does currently not remove any version postfixes, if you w
 
 Purpose of this interface is to provide external access to the stored version number (and future properties to possibly come).
 
-Currently all relevant data is stored as "shared plugin data" to allow other plugins consuming the data. All following described fields are part of stable API of this plugin and shopuld be safe to rely on.
+Currently all relevant data is stored as "shared plugin data" to allow other plugins consuming the data. All following described fields are part of stable API of this plugin and should be safe to rely on.
 
 ### sharedPluginData: version
 
@@ -137,6 +140,10 @@ Please Note: i omitted unnecessary outputs from the result.
 As you can see the actual version of the node appears twice, so you might be tempted to use the versions extracted from the node names (which would allow you to use the "cheaper" `GET file` endpoint). But be aware the authorative "version" is the one stored in the `sharedPluginData` section.
 
 The reason is the user might have renamed the Node changing or removing the version. And there is no way to track this change without the stored plugin data.
+
+## Contribute
+
+Thank you for reading so far, any help is welcome. May it be constructive feedback or a Pull Request. We are happy to hear from you.
 
 ---
 
