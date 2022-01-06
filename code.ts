@@ -156,7 +156,7 @@ function updateUi() {
 
 		figma.ui.postMessage(message);
 	} else {
-		figma.closePlugin('Butterfly requires selected Nodes.');
+		figma.closePlugin('Semantic Versioning requires selected Nodes.');
 	}
 }
 
@@ -164,5 +164,5 @@ if (figma.editorType === 'figma') {
 	figma.showUI(ui);
 	updateUi();
 } else {
-	figma.closePlugin('Butterfly is currently only running in classic Figma.');
+	figma.closePlugin('Semantic Versioning is currently only running in Figma Design.');
 }

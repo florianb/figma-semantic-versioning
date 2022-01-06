@@ -3,7 +3,7 @@
 import Version from './version.js';
 
 export default abstract class Plugin {
-	public static namespace = 'com.github.florianb.figma_butterfly';
+	public static namespace = 'com.github.florianb.figma_semantic_versioning';
 
 	// Get config value
 	public static getConfig(key: string): any | undefined {

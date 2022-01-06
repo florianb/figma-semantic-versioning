@@ -1,4 +1,4 @@
-# Figma-Butterfly
+# Figma Semantic Versioning
 
 Simplified [Semantic Versioning][semver] for your Figma Nodes, consumable per API.
 
@@ -113,7 +113,7 @@ Results in:
 
 ```
 {
-  "name": "Test Figma-Butterfly",
+  "name": "My Fancy Document Title",
   ...
   "nodes": {
     "108:3": {
@@ -121,7 +121,7 @@ Results in:
         "id": "108:3",
         "name": "Frame 1@2.0.0-rfc.1",
         "sharedPluginData": {
-          "com.github.florianb.figma_butterfly": {
+          "com.github.florianb.figma_semantic_versioning": {
             "version": "2.0.0-rfc.1"
           }
         }

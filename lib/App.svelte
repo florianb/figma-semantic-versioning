@@ -27,7 +27,7 @@
 	window.onmessage = (event) => {
 		const message = event.data.pluginMessage;
 
-		console.log('ui received', message);
+		// console.log('ui received', message);
 
 		switch (message.type) {
 			case 'settings':
