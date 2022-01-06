@@ -1,0 +1,35 @@
+/* fakecss:/home/florian-neumann/github/figma-semantic-versioning/lib/ActionList.esbuild-svelte-fake-css */
+.container.svelte-1m95hjm {
+  padding: 2px;
+}
+input.svelte-1m95hjm {
+  vertical-align: super;
+}
+label.svelte-1m95hjm {
+  display: inline-block;
+}
+.list-element.svelte-1m95hjm {
+  margin-bottom: 6px;
+}
+.header.svelte-1m95hjm {
+  font-size: 10px;
+  font-weight: 600;
+  color: #444;
+}
+.description.svelte-1m95hjm {
+  font-weight: 400;
+  color: #555;
+}
+.body.svelte-1m95hjm {
+  margin-top: 1px;
+  font-size: 14px;
+}
+
+/* fakecss:/home/florian-neumann/github/figma-semantic-versioning/lib/App.esbuild-svelte-fake-css */
+.body.svelte-lg7e9c {
+  font-family: Inter, sans-serif;
+  font-feature-settings: "liga", "calt";
+  font-size: 12px;
+  font-weight: 400;
+  font-stretch: 100%;
+}
