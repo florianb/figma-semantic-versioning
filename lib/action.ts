@@ -20,6 +20,7 @@ export interface ActionObject {
 	version: string;
 	nodeId?: string;
 	label: string;
+	nameVersion?: string;
 }
 
 export default class Action {

@@ -1,15 +1,15 @@
 {
   "name": "Butterfly",
-  "version": "1.0.0",
-  "description": "Your Figma plugin",
+  "version": "0.1.0",
+  "description": "Simplified Semver-based versioning for your Figma Design Nodes",
   "main": "dist/code.js",
   "scripts": {
     "watch": "watchexec -i dist 'npm run lint && npm run build'",
     "lint": "tsc -noEmit -p tsconfig.json && xo **/*.ts",
     "build": "node build.js"
   },
-  "author": "",
-  "license": "",
+  "author": "florian.neumann@mindkeeper.solutions",
+  "license": "MIT",
   "devDependencies": {
     "@chialab/esbuild-plugin-html": "^0.12.31",
     "@figma/plugin-typings": "^1.40",

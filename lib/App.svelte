@@ -1,12 +1,14 @@
-{#if type === 'list'}
-	<NodeList nodes={data}/>
-{:else if type === 'actions'}
-	<ActionList actions={data}/>
-{/if}
+<div class="body">
+	{#if type === 'list'}
+		<NodeList nodes={data}/>
+	{:else if type === 'actions'}
+		<ActionList actions={data}/>
+	{/if}
 
-{#if settings !== null}
-	<Settings useRfc={settings.useRfc}/>
-{/if}
+	{#if settings !== null}
+		<Settings useRfc={settings.useRfc} updateName={settings.updateName}/>
+	{/if}
+</div>
 
 <script>
 	import {onMount} from 'svelte';
@@ -25,18 +27,26 @@
 	window.onmessage = (event) => {
 		const message = event.data.pluginMessage;
 
-		console.log(message.type);
+		console.log('ui received', message);
 
 		switch (message.type) {
 			case 'settings':
 				settings = message.settings;
-				break;
+					break;
 			default:
 				type = message.type;
 				data = message.data;
-
-				console.log(data);
+				break;
 		}
 	}
 </script>
 
+<style>
+.body {
+	font-family: Inter, sans-serif;
+	font-feature-settings: "liga", "calt";
+	font-size: 12px;
+	font-weight: 400;
+	font-stretch: 100%;
+}
+</style>

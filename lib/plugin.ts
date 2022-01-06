@@ -3,44 +3,62 @@
 import Version from './version.js';
 
 export default abstract class Plugin {
-	public static namespace = 'solutions.mindkeeper.butterfly';
+	public static namespace = 'com.github.florianb.figma_butterfly';
 
-	// Get or set the config value
-	public static config(key: string, value?: any): any | undefined {
-		if (value === undefined) {
-			const returnValue = figma.currentPage.getSharedPluginData(this.namespace, key);
+	// Get config value
+	public static getConfig(key: string): any | undefined {
+		const value = figma.currentPage.getSharedPluginData(this.namespace, key);
 
-			if (returnValue.length > 0) {
-				return JSON.parse(returnValue);
-			}
-		} else {
-			const newValue = value === undefined ? '' : JSON.stringify(value);
-			figma.currentPage.setSharedPluginData(this.namespace, key, newValue);
+		return Plugin.unpackValue(value);
+	}
+
+	// Set config value
+	public static setConfig(key: string, value?: any): void {
+		figma.currentPage.setSharedPluginData(this.namespace, key, Plugin.packValue(value));
+	}
+
+	// Get node value
+	public static getNode(node: BaseNode, key: string): any | undefined {
+		const value = node.getSharedPluginData(this.namespace, key);
+
+		return Plugin.unpackValue(value);
+	}
+
+	// Set node value
+	public static setNode(node: BaseNode, key: string, value?: any): void {
+		node.setSharedPluginData(this.namespace, key, Plugin.packValue(value));
+	}
+
+	// Get Version
+	public static getVersion(node: BaseNode): Version | undefined {
+		const versionString = Plugin.getNode(node, 'version') as string | undefined;
+
+		return versionString ? new Version(versionString) : undefined;
+	}
+
+	// Set Version
+	public static setVersion(node: BaseNode, version?: Version | string) {
+		const newVersion = version instanceof Version ? (new Version(version)).toString() : version;
+
+		Plugin.setNode(node, 'version', newVersion);
+	}
+
+	private static packValue(value: any): string {
+		switch (typeof value) {
+			case 'string':
+				return value;
+			case 'undefined':
+				return '';
+			default:
+				return JSON.stringify(value);
 		}
 	}
 
-	// Get or set a node value
-	public static node(node: BaseNode, key: string, value?: any): any | undefined {
-		if (value === undefined) {
-			const returnValue = node.getSharedPluginData(this.namespace, key);
-
-			if (returnValue.length > 0) {
-				return JSON.parse(returnValue);
-			}
-		} else {
-			const newValue = value === undefined ? '' : JSON.stringify(value);
-			node.setSharedPluginData(this.namespace, key, newValue);
-		}
-	}
-
-	// Get or set a version
-	public static version(node: BaseNode, version?: Version): Version | undefined {
-		if (version) {
-			Plugin.node(node, 'version', version.toString());
-		} else {
-			const versionString: string = Plugin.node(node, 'version') as string;
-
-			return versionString ? new Version(versionString) : undefined;
+	private static unpackValue(value: string): any {
+		try {
+			return JSON.parse(value);
+		} catch {
+			return value === '' ? undefined : value;
 		}
 	}
 }

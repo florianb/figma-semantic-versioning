@@ -13,6 +13,7 @@ function isVersion(object: any): object is Version {
 
 export default class Version {
 	public static levels: string[] = ['major', 'minor', 'patch', 'rfc'];
+	public static pattern = /\d+\.\d+\.\d+(-rfc\.\d+)?$/im;
 
 	major: number;
 	minor: number;
@@ -22,13 +23,10 @@ export default class Version {
 	constructor(version?: VersionObject | Version | string, useRfc?: boolean) {
 		let newVersion: VersionObject;
 
-		console.log(version);
-
 		if (typeof version === 'string') {
 			const [major, minor, patch, rfc]
 				= version.split(/\.|-rfc\./)
 					.map(level => level ? Number.parseInt(level, 10) : undefined);
-
 			newVersion = {
 				major,
 				minor,
@@ -97,16 +95,34 @@ export default class Version {
 			});
 		}
 
+		if (baseVersion.rfc) {
+			options.push({
+				...baseVersion,
+				rfc: undefined,
+			});
+		}
+
 		return options;
 	}
 
 	elevatedLevel(otherVersion: Version): string | void {
 		for (const level of Version.levels) {
+			if (level === 'rfc' && !otherVersion[level] && this[level]) {
+				return 'release';
+			}
+
 			if (this[level] !== otherVersion[level]) {
 				return level;
 			}
 		}
 
 		return undefined;
+	}
+
+	equals(otherVersion: Version): boolean {
+		return this.major === otherVersion.major
+			&& this.minor === otherVersion.minor
+			&& this.patch === otherVersion.patch
+			&& this.rfc === otherVersion.rfc;
 	}
 }

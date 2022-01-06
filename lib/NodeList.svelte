@@ -1,6 +1,6 @@
 <ul>
 	{#each nodes as node} 
-		<li>{node.id} {node.name} {node.version || 'unversioniert'}</li>
+		<li>"{node.name}" {node.version || 'not versioned'}</li>
 	{/each}
 </ul>
 

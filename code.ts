@@ -5,7 +5,10 @@ import Plugin from './lib/plugin.js';
 // @ts-expect-error: TS2307
 import ui from './ui.html';
 
-function deriveActions(node: BaseNode, version?: Version, useRfc?: boolean): ActionObject[] {
+const versionRegex = /@(\d+\.\d+\.\d+(-rfc\.\d+)?)$/im;
+
+function deriveActions(node: BaseNode, version?: Version, useRfc?: boolean, updateName?: boolean): ActionObject[] {
+	const versionFromName = getVersionFromName(node);
 	const actions: ActionObject[] = [{
 		version: version ? version.toString() : null,
 		label: 'keep',
@@ -31,28 +34,59 @@ function deriveActions(node: BaseNode, version?: Version, useRfc?: boolean): Act
 		actions.push(action.toObject());
 	}
 
+	const hasOneVersionUndefined = (!versionFromName !== !version);
+	const hasDifferentVersion = (!!versionFromName && !!version && !version.equals(versionFromName));
+	if (updateName && (hasOneVersionUndefined || hasDifferentVersion)) {
+		actions.push({
+			nodeId: node.id,
+			version: versionFromName ? versionFromName.toString() : undefined,
+			label: 'fromName',
+		}, {
+			nodeId: node.id,
+			label: 'toName',
+			version: version ? version.toString() : undefined,
+			nameVersion: versionFromName ? versionFromName.toString() : undefined,
+		});
+	}
+
 	return actions;
 }
 
-function updateVersionInName(node: BaseNode, version?: Version): void {
+function getVersionFromName(node: BaseNode): undefined | Version {
 	const name = node.name;
+	const match = versionRegex.exec(name);
 
-	if (version === undefined) {
+	if (match) {
+		return new Version(match[1]);
+	}
+
+	return undefined;
+}
+
+function updateVersionInName(node: BaseNode, version?: Version | string): void {
+	const name = node.name;
+	const hasVersionInName = getVersionFromName(node) !== undefined;
+
+	if (version === undefined || version === '') {
+		node.name = name.replace(versionRegex, '');
 	} else {
+		const newVersionString = `@${version.toString()}`;
+
+		node.name = hasVersionInName
+			? name.replace(versionRegex, newVersionString)
+			: `${name}${newVersionString}`;
 	}
 }
 
 figma.ui.onmessage = message => {
-	console.log('message:', message);
-
 	switch (message.type) {
 		case 'settings':
 			const settings = {
-				useRfc: (Plugin.config('useRfcWorkflow') as boolean) || false,
-				// updateName: (Plugin.config('updateName') as boolean) || false,
+				useRfc: false,
+				updateName: false,
+				...Plugin.getConfig('settings'),
 			};
 
-			console.log('setting', settings);
 			figma.ui.postMessage({
 				type: 'settings',
 				settings,
@@ -60,16 +94,24 @@ figma.ui.onmessage = message => {
 
 			break;
 		case 'updateSettings':
-			Plugin.config('useRfcWorkflow', message.settings.useRfc);
-			Plugin.config('updateName', message.settings.updateName);
+			const oldSettings = Plugin.getConfig('settings') || {};
+			const newSettings = {...oldSettings, ...message.settings};
+
+			Plugin.setConfig('settings', newSettings);
+
 			updateUi();
 			break;
 		case 'updateVersion':
 			const action = message.action
 			const node = figma.getNodeById(action.nodeId);
-			const updateName = Plugin.config('updateName', message.settings.updateName) || false;
-			const version = new Version(action.version);
-			Plugin.version(node, version);
+			const {updateName} = Plugin.getConfig('settings') || {};
+			const version = action.version ? new Version(action.version) : '';
+
+			Plugin.setVersion(node, version);
+			if (updateName) {
+				updateVersionInName(node, version);
+			}
+
 			updateUi();
 			break;
 		default:
@@ -78,18 +120,17 @@ figma.ui.onmessage = message => {
 
 function updateUi() {
 	const page = figma.currentPage;
-	const user = figma.currentUser;
 	const selection = page.selection;
 
 	if (selection.length > 0) {
 		let message = null;
 
 		if (selection.length === 1) {
-			const useRfc = Plugin.config('useRfcWorkflow') as boolean;
+			const {useRfc, updateName} = Plugin.getConfig('settings') || {};
 			const node = selection[0];
-			const version = Plugin.version(node);
+			const version = Plugin.getVersion(node);
 
-			const actions = deriveActions(node, version, useRfc);
+			const actions = deriveActions(node, version, useRfc, updateName);
 
 			message = {
 				type: 'actions',
@@ -97,7 +138,7 @@ function updateUi() {
 			};
 		} else {
 			const selectedNodes = selection.map(node => {
-				const versionValue = Plugin.node(node, 'version') as string | undefined;
+				const versionValue = Plugin.getNode(node, 'version') as string | undefined;
 				const version = versionValue ? (new Version(versionValue)).toString() : null;
 
 				return {
