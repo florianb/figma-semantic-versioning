@@ -1,4 +1,5 @@
 <div class="container">
+	<h4>Available Options</h4>
 	{#each actions as action} 
 		<div class="list-element">
 			<input
@@ -12,7 +13,7 @@
 				<div class="header">
 					{labels[action.label].label}
 					{#if labels[action.label].description}
-						<span class="description">&ndash;&nbsp;{labels[action.label].description}</span>
+						<span class="description">&middot;&nbsp;{labels[action.label].description}</span>
 					{/if}
 				</div>
 				<div class="body">
@@ -26,9 +27,79 @@
 	{/each}
 </div>
 
-<button
-	on:click={saveAction(selection, actions)}
-	disabled={!selection || selection === 'keep'}>save</button>
+<div class="buttons">
+	<button
+		on:click={saveAction(selection, actions)}
+		disabled={!selection || selection === 'keep'}>
+		save
+	</button>
+</div>
+
+
+<style>
+	.container {
+		padding: 2px;
+	}
+
+	.container h4 {
+		font-size: 10px;
+		color: #777;
+		margin-top: 0;
+		margin-bottom: 1ex;
+	}
+
+	input {
+		vertical-align: super;
+	}
+
+	label {
+		display: inline-block;
+		margin-left: 0.6em;
+	}
+
+	.list-element {
+		padding: 1ex 0.4ex 0.8ex 0.4ex;
+		margin-bottom: 0.8ex;
+	}
+
+	.list-element:hover {
+		background-color: #daebf7;
+	}
+
+	.header {
+		font-size: 10px;
+		font-weight: 600;
+		color: #444;
+	}
+
+	.description {
+		font-weight: 400;
+		color: #555;
+	}
+
+	.body {
+		margin-top: 1px;
+		font-size: 14px;
+	}
+
+	.buttons {
+		display: flex;
+		justify-content: center;
+
+		margin: 0 1ex 0 1ex;
+		padding: 0.2ex;
+	}
+
+	.buttons button {
+		font-size: 14px;
+		display: inline-block;
+		padding: 0.35em 1.2em;
+		margin: 0 0.3em 0.3em 0;
+		text-align: center;
+		transition: all 0.5s;
+	}
+</style>
+
 
 <script>
 	export let actions = [];
@@ -44,18 +115,18 @@
 		},
 		major: {
 			label: 'Major',
-			description: 'Change breaks backend',
+			description: 'Change may break backend',
 		},
 		minor: {
 			label: 'Minor',
-			description: 'Change might affect backend',
+			description: 'Change may affect backend',
 		},
 		patch: {
 				label: 'Patch',
 			description: 'Fix not affecting backend',
 		},
 		rfc: {
-			label: 'Request for comments',
+			label: 'Request for Comments',
 			description: 'New iteration for draft',
 		},
 		release: {
@@ -63,12 +134,12 @@
 			description: '',
 		},
 		fromName: {
-			label: 'From Name',
-			description: 'Set version from postfix',
+			label: 'From Appendix',
+			description: 'Set inner version by appendix',
 		},
 		toName: {
-			label: 'To Name',
-			description: 'Set postfix from version',
+			label: 'To Appendix',
+			description: 'Set appendix by inner version',
 		},
 	};
 
@@ -95,39 +166,7 @@
 				action,
 			}
 		}, '*');
+
+		selection = 'keep';
 	}
 </script>
-
-<style>
-	.container {
-		padding: 2px;
-	}
-
-	input {
-		vertical-align: super;
-	}
-
-	label {
-		display: inline-block;
-	}
-
-	.list-element {
-		margin-bottom: 6px;
-	}
-
-	.header {
-		font-size: 10px;
-		font-weight: 600;
-		color: #444;
-	}
-
-	.description {
-		font-weight: 400;
-		color: #555;
-	}
-
-	.body {
-		margin-top: 1px;
-		font-size: 14px;
-	}
-</style>

@@ -124,6 +124,7 @@ function updateUi() {
 
 	if (selection.length > 0) {
 		let message = null;
+		const uiOptions = {};
 
 		if (selection.length === 1) {
 			const {useRfc, updateName} = Plugin.getConfig('settings') || {};
@@ -132,6 +133,7 @@ function updateUi() {
 
 			const actions = deriveActions(node, version, useRfc, updateName);
 
+			uiOptions['title'] = node.name;
 			message = {
 				type: 'actions',
 				data: actions,
@@ -154,6 +156,7 @@ function updateUi() {
 			};
 		}
 
+		figma.showUI(ui, uiOptions);
 		figma.ui.postMessage(message);
 	} else {
 		figma.closePlugin('Semantic Versioning requires selected Nodes.');
@@ -161,7 +164,6 @@ function updateUi() {
 }
 
 if (figma.editorType === 'figma') {
-	figma.showUI(ui);
 	updateUi();
 } else {
 	figma.closePlugin('Semantic Versioning is currently only running in Figma Design.');

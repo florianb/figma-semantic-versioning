@@ -215,31 +215,93 @@ var ui_default = `<!DOCTYPE html>
 		<meta charset="utf-8">
 		<link rel="stylesheet" type="text/css" href="dist/ui.css"/>
 	<style>
+/* fakecss:/home/florian-neumann/github/figma-semantic-versioning/lib/Settings.esbuild-svelte-fake-css */
+details.svelte-w92wh4 {
+  margin-top: 2ex;
+  padding: 1.2ex;
+  border-top: 1px solid #e2e2e2;
+  font-size: 10px;
+  color: #888;
+}
+summary.svelte-w92wh4 {
+  font-weight: 600;
+  margin-bottom: 1ex;
+}
+details.svelte-w92wh4:hover {
+  color: #333;
+}
+
+/* fakecss:/home/florian-neumann/github/figma-semantic-versioning/lib/NodeList.esbuild-svelte-fake-css */
+table.svelte-15gjnjl.svelte-15gjnjl.svelte-15gjnjl {
+  font-size: 11px;
+  font-weight: 400;
+  text-align: left;
+  table-layout: fixed;
+  width: 100%;
+}
+th.svelte-15gjnjl.svelte-15gjnjl.svelte-15gjnjl {
+  font-size: 10px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 2px;
+}
+table.svelte-15gjnjl > tr.svelte-15gjnjl > th.svelte-15gjnjl {
+  width: 70%;
+}
+.version.svelte-15gjnjl.svelte-15gjnjl.svelte-15gjnjl {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
 /* fakecss:/home/florian-neumann/github/figma-semantic-versioning/lib/ActionList.esbuild-svelte-fake-css */
-.container.svelte-1m95hjm {
+.container.svelte-vdjdgi.svelte-vdjdgi {
   padding: 2px;
 }
-input.svelte-1m95hjm {
+.container.svelte-vdjdgi h4.svelte-vdjdgi {
+  font-size: 10px;
+  color: #777;
+  margin-top: 0;
+  margin-bottom: 1ex;
+}
+input.svelte-vdjdgi.svelte-vdjdgi {
   vertical-align: super;
 }
-label.svelte-1m95hjm {
+label.svelte-vdjdgi.svelte-vdjdgi {
   display: inline-block;
+  margin-left: 0.6em;
 }
-.list-element.svelte-1m95hjm {
-  margin-bottom: 6px;
+.list-element.svelte-vdjdgi.svelte-vdjdgi {
+  padding: 1ex 0.4ex 0.8ex 0.4ex;
+  margin-bottom: 0.8ex;
 }
-.header.svelte-1m95hjm {
+.list-element.svelte-vdjdgi.svelte-vdjdgi:hover {
+  background-color: #daebf7;
+}
+.header.svelte-vdjdgi.svelte-vdjdgi {
   font-size: 10px;
   font-weight: 600;
   color: #444;
 }
-.description.svelte-1m95hjm {
+.description.svelte-vdjdgi.svelte-vdjdgi {
   font-weight: 400;
   color: #555;
 }
-.body.svelte-1m95hjm {
+.body.svelte-vdjdgi.svelte-vdjdgi {
   margin-top: 1px;
   font-size: 14px;
+}
+.buttons.svelte-vdjdgi.svelte-vdjdgi {
+  display: flex;
+  justify-content: center;
+  margin: 0 1ex 0 1ex;
+  padding: 0.2ex;
+}
+.buttons.svelte-vdjdgi button.svelte-vdjdgi {
+  font-size: 14px;
+  display: inline-block;
+  padding: 0.35em 1.2em;
+  margin: 0 0.3em 0.3em 0;
+  text-align: center;
+  transition: all 0.5s;
 }
 
 /* fakecss:/home/florian-neumann/github/figma-semantic-versioning/lib/App.esbuild-svelte-fake-css */
@@ -307,9 +369,6 @@ label.svelte-1m95hjm {
   }
   function space() {
     return text(" ");
-  }
-  function empty() {
-    return text("");
   }
   function listen(node, event, handler, options) {
     node.addEventListener(event, handler, options);
@@ -593,6 +652,7 @@ label.svelte-1m95hjm {
 
   // lib/Settings.svelte
   function create_if_block_1(ctx) {
+    let div;
     let input;
     let t0;
     let label;
@@ -600,19 +660,21 @@ label.svelte-1m95hjm {
     let dispose;
     return {
       c() {
+        div = element("div");
         input = element("input");
         t0 = space();
         label = element("label");
-        label.textContent = 'Use "requests for comments"';
+        label.textContent = 'Use "request for comments" workflow';
         attr(input, "type", "checkbox");
         attr(input, "id", "use-rfc");
         attr(label, "for", "use-rfc");
       },
       m(target, anchor) {
-        insert(target, input, anchor);
+        insert(target, div, anchor);
+        append(div, input);
         input.checked = ctx[0];
-        insert(target, t0, anchor);
-        insert(target, label, anchor);
+        append(div, t0);
+        append(div, label);
         if (!mounted) {
           dispose = [
             listen(input, "change", ctx[2]),
@@ -632,17 +694,14 @@ label.svelte-1m95hjm {
       },
       d(detaching) {
         if (detaching)
-          detach(input);
-        if (detaching)
-          detach(t0);
-        if (detaching)
-          detach(label);
+          detach(div);
         mounted = false;
         run_all(dispose);
       }
     };
   }
   function create_if_block(ctx) {
+    let div;
     let input;
     let t0;
     let label;
@@ -650,19 +709,21 @@ label.svelte-1m95hjm {
     let dispose;
     return {
       c() {
+        div = element("div");
         input = element("input");
         t0 = space();
         label = element("label");
-        label.textContent = 'Use version postfix (f.e. "@1.0.0") at Node names';
+        label.textContent = 'Use version appendix (f.e. "@1.0.0") at Node names';
         attr(input, "type", "checkbox");
         attr(input, "id", "update-name");
         attr(label, "for", "update-name");
       },
       m(target, anchor) {
-        insert(target, input, anchor);
+        insert(target, div, anchor);
+        append(div, input);
         input.checked = ctx[1];
-        insert(target, t0, anchor);
-        insert(target, label, anchor);
+        append(div, t0);
+        append(div, label);
         if (!mounted) {
           dispose = [
             listen(input, "change", ctx[3]),
@@ -682,44 +743,42 @@ label.svelte-1m95hjm {
       },
       d(detaching) {
         if (detaching)
-          detach(input);
-        if (detaching)
-          detach(t0);
-        if (detaching)
-          detach(label);
+          detach(div);
         mounted = false;
         run_all(dispose);
       }
     };
   }
   function create_fragment(ctx) {
-    let h3;
+    let details;
+    let summary;
     let t1;
     let t2;
-    let if_block1_anchor;
     let if_block0 = ctx[0] !== null && create_if_block_1(ctx);
     let if_block1 = ctx[1] !== null && create_if_block(ctx);
     return {
       c() {
-        h3 = element("h3");
-        h3.textContent = "Settings (per Document)";
+        details = element("details");
+        summary = element("summary");
+        summary.textContent = "Documentwide Settings";
         t1 = space();
         if (if_block0)
           if_block0.c();
         t2 = space();
         if (if_block1)
           if_block1.c();
-        if_block1_anchor = empty();
+        attr(summary, "class", "svelte-w92wh4");
+        attr(details, "class", "svelte-w92wh4");
       },
       m(target, anchor) {
-        insert(target, h3, anchor);
-        insert(target, t1, anchor);
+        insert(target, details, anchor);
+        append(details, summary);
+        append(details, t1);
         if (if_block0)
-          if_block0.m(target, anchor);
-        insert(target, t2, anchor);
+          if_block0.m(details, null);
+        append(details, t2);
         if (if_block1)
-          if_block1.m(target, anchor);
-        insert(target, if_block1_anchor, anchor);
+          if_block1.m(details, null);
       },
       p(ctx2, [dirty]) {
         if (ctx2[0] !== null) {
@@ -728,7 +787,7 @@ label.svelte-1m95hjm {
           } else {
             if_block0 = create_if_block_1(ctx2);
             if_block0.c();
-            if_block0.m(t2.parentNode, t2);
+            if_block0.m(details, t2);
           }
         } else if (if_block0) {
           if_block0.d(1);
@@ -740,7 +799,7 @@ label.svelte-1m95hjm {
           } else {
             if_block1 = create_if_block(ctx2);
             if_block1.c();
-            if_block1.m(if_block1_anchor.parentNode, if_block1_anchor);
+            if_block1.m(details, null);
           }
         } else if (if_block1) {
           if_block1.d(1);
@@ -751,17 +810,11 @@ label.svelte-1m95hjm {
       o: noop,
       d(detaching) {
         if (detaching)
-          detach(h3);
-        if (detaching)
-          detach(t1);
+          detach(details);
         if (if_block0)
-          if_block0.d(detaching);
-        if (detaching)
-          detach(t2);
+          if_block0.d();
         if (if_block1)
-          if_block1.d(detaching);
-        if (detaching)
-          detach(if_block1_anchor);
+          if_block1.d();
       }
     };
   }
@@ -815,42 +868,51 @@ label.svelte-1m95hjm {
     return child_ctx;
   }
   function create_each_block(ctx) {
-    let li;
+    let tr;
+    let td0;
+    let t0_value = ctx[1].name + "";
     let t0;
-    let t1_value = ctx[1].name + "";
     let t1;
+    let td1;
+    let t2_value = (ctx[1].version || "not versioned") + "";
     let t2;
-    let t3_value = (ctx[1].version || "not versioned") + "";
     let t3;
     return {
       c() {
-        li = element("li");
-        t0 = text('"');
-        t1 = text(t1_value);
-        t2 = text('" ');
-        t3 = text(t3_value);
+        tr = element("tr");
+        td0 = element("td");
+        t0 = text(t0_value);
+        t1 = space();
+        td1 = element("td");
+        t2 = text(t2_value);
+        t3 = space();
+        attr(td1, "class", "version svelte-15gjnjl");
       },
       m(target, anchor) {
-        insert(target, li, anchor);
-        append(li, t0);
-        append(li, t1);
-        append(li, t2);
-        append(li, t3);
+        insert(target, tr, anchor);
+        append(tr, td0);
+        append(td0, t0);
+        append(tr, t1);
+        append(tr, td1);
+        append(td1, t2);
+        append(tr, t3);
       },
       p(ctx2, dirty) {
-        if (dirty & 1 && t1_value !== (t1_value = ctx2[1].name + ""))
-          set_data(t1, t1_value);
-        if (dirty & 1 && t3_value !== (t3_value = (ctx2[1].version || "not versioned") + ""))
-          set_data(t3, t3_value);
+        if (dirty & 1 && t0_value !== (t0_value = ctx2[1].name + ""))
+          set_data(t0, t0_value);
+        if (dirty & 1 && t2_value !== (t2_value = (ctx2[1].version || "not versioned") + ""))
+          set_data(t2, t2_value);
       },
       d(detaching) {
         if (detaching)
-          detach(li);
+          detach(tr);
       }
     };
   }
   function create_fragment2(ctx) {
-    let ul;
+    let table;
+    let tr;
+    let t3;
     let each_value = ctx[0];
     let each_blocks = [];
     for (let i = 0; i < each_value.length; i += 1) {
@@ -858,15 +920,23 @@ label.svelte-1m95hjm {
     }
     return {
       c() {
-        ul = element("ul");
+        table = element("table");
+        tr = element("tr");
+        tr.innerHTML = \`<th class="svelte-15gjnjl">Name</th> 
+		<th class="svelte-15gjnjl">Version</th>\`;
+        t3 = space();
         for (let i = 0; i < each_blocks.length; i += 1) {
           each_blocks[i].c();
         }
+        attr(tr, "class", "svelte-15gjnjl");
+        attr(table, "class", "svelte-15gjnjl");
       },
       m(target, anchor) {
-        insert(target, ul, anchor);
+        insert(target, table, anchor);
+        append(table, tr);
+        append(table, t3);
         for (let i = 0; i < each_blocks.length; i += 1) {
-          each_blocks[i].m(ul, null);
+          each_blocks[i].m(table, null);
         }
       },
       p(ctx2, [dirty]) {
@@ -880,7 +950,7 @@ label.svelte-1m95hjm {
             } else {
               each_blocks[i] = create_each_block(child_ctx);
               each_blocks[i].c();
-              each_blocks[i].m(ul, null);
+              each_blocks[i].m(table, null);
             }
           }
           for (; i < each_blocks.length; i += 1) {
@@ -893,7 +963,7 @@ label.svelte-1m95hjm {
       o: noop,
       d(detaching) {
         if (detaching)
-          detach(ul);
+          detach(table);
         destroy_each(each_blocks, detaching);
       }
     };
@@ -928,9 +998,9 @@ label.svelte-1m95hjm {
     return {
       c() {
         span = element("span");
-        t0 = text("\\u2013\\xA0");
+        t0 = text("\\xB7\\xA0");
         t1 = text(t1_value);
-        attr(span, "class", "description svelte-1m95hjm");
+        attr(span, "class", "description svelte-vdjdgi");
       },
       m(target, anchor) {
         insert(target, span, anchor);
@@ -1068,13 +1138,13 @@ label.svelte-1m95hjm {
         attr(input, "id", input_id_value = ctx[6].label);
         input.__value = input_value_value = ctx[6].label;
         input.value = input.__value;
-        attr(input, "class", "svelte-1m95hjm");
+        attr(input, "class", "svelte-vdjdgi");
         ctx[5][0].push(input);
-        attr(div0, "class", "header svelte-1m95hjm");
-        attr(div1, "class", "body svelte-1m95hjm");
+        attr(div0, "class", "header svelte-vdjdgi");
+        attr(div1, "class", "body svelte-vdjdgi");
         attr(label, "for", label_for_value = ctx[6].label);
-        attr(label, "class", "svelte-1m95hjm");
-        attr(div2, "class", "list-element svelte-1m95hjm");
+        attr(label, "class", "svelte-vdjdgi");
+        attr(div2, "class", "list-element svelte-vdjdgi");
       },
       m(target, anchor) {
         insert(target, div2, anchor);
@@ -1171,10 +1241,13 @@ label.svelte-1m95hjm {
     };
   }
   function create_fragment3(ctx) {
-    let div;
-    let t0;
-    let button;
+    let div0;
+    let h4;
     let t1;
+    let t2;
+    let div1;
+    let button;
+    let t3;
     let button_disabled_value;
     let mounted;
     let dispose;
@@ -1185,24 +1258,34 @@ label.svelte-1m95hjm {
     }
     return {
       c() {
-        div = element("div");
+        div0 = element("div");
+        h4 = element("h4");
+        h4.textContent = "Available Options";
+        t1 = space();
         for (let i = 0; i < each_blocks.length; i += 1) {
           each_blocks[i].c();
         }
-        t0 = space();
+        t2 = space();
+        div1 = element("div");
         button = element("button");
-        t1 = text("save");
-        attr(div, "class", "container svelte-1m95hjm");
+        t3 = text("save");
+        attr(h4, "class", "svelte-vdjdgi");
+        attr(div0, "class", "container svelte-vdjdgi");
         button.disabled = button_disabled_value = !ctx[1] || ctx[1] === "keep";
+        attr(button, "class", "svelte-vdjdgi");
+        attr(div1, "class", "buttons svelte-vdjdgi");
       },
       m(target, anchor) {
-        insert(target, div, anchor);
+        insert(target, div0, anchor);
+        append(div0, h4);
+        append(div0, t1);
         for (let i = 0; i < each_blocks.length; i += 1) {
-          each_blocks[i].m(div, null);
+          each_blocks[i].m(div0, null);
         }
-        insert(target, t0, anchor);
-        insert(target, button, anchor);
-        append(button, t1);
+        insert(target, t2, anchor);
+        insert(target, div1, anchor);
+        append(div1, button);
+        append(button, t3);
         if (!mounted) {
           dispose = listen(button, "click", function() {
             if (is_function(saveAction(ctx[1], ctx[0])))
@@ -1223,7 +1306,7 @@ label.svelte-1m95hjm {
             } else {
               each_blocks[i] = create_each_block2(child_ctx);
               each_blocks[i].c();
-              each_blocks[i].m(div, null);
+              each_blocks[i].m(div0, null);
             }
           }
           for (; i < each_blocks.length; i += 1) {
@@ -1239,12 +1322,12 @@ label.svelte-1m95hjm {
       o: noop,
       d(detaching) {
         if (detaching)
-          detach(div);
+          detach(div0);
         destroy_each(each_blocks, detaching);
         if (detaching)
-          detach(t0);
+          detach(t2);
         if (detaching)
-          detach(button);
+          detach(div1);
         mounted = false;
         dispose();
       }
@@ -1256,6 +1339,7 @@ label.svelte-1m95hjm {
     parent.postMessage({
       pluginMessage: { type: "updateVersion", action }
     }, "*");
+    selection = "keep";
   }
   function instance3($self, $props, $invalidate) {
     let { actions = [] } = $props;
@@ -1268,28 +1352,28 @@ label.svelte-1m95hjm {
       },
       major: {
         label: "Major",
-        description: "Change breaks backend"
+        description: "Change may break backend"
       },
       minor: {
         label: "Minor",
-        description: "Change might affect backend"
+        description: "Change may affect backend"
       },
       patch: {
         label: "Patch",
         description: "Fix not affecting backend"
       },
       rfc: {
-        label: "Request for comments",
+        label: "Request for Comments",
         description: "New iteration for draft"
       },
       release: { label: "Release", description: "" },
       fromName: {
-        label: "From Name",
-        description: "Set version from postfix"
+        label: "From Appendix",
+        description: "Set inner version by appendix"
       },
       toName: {
-        label: "To Name",
-        description: "Set postfix from version"
+        label: "To Appendix",
+        description: "Set appendix by inner version"
       }
     };
     function currentVersionFor(label) {
@@ -1682,11 +1766,13 @@ function updateUi() {
   const selection = page.selection;
   if (selection.length > 0) {
     let message = null;
+    const uiOptions = {};
     if (selection.length === 1) {
       const { useRfc, updateName } = Plugin.getConfig("settings") || {};
       const node = selection[0];
       const version = Plugin.getVersion(node);
       const actions = deriveActions(node, version, useRfc, updateName);
+      uiOptions["title"] = node.name;
       message = {
         type: "actions",
         data: actions
@@ -1706,13 +1792,13 @@ function updateUi() {
         data: selectedNodes
       };
     }
+    figma.showUI(ui_default, uiOptions);
     figma.ui.postMessage(message);
   } else {
     figma.closePlugin("Semantic Versioning requires selected Nodes.");
   }
 }
 if (figma.editorType === "figma") {
-  figma.showUI(ui_default);
   updateUi();
 } else {
   figma.closePlugin("Semantic Versioning is currently only running in Figma Design.");

@@ -2,6 +2,12 @@
 
 Simplified [Semantic Versioning][semver] for your Figma Nodes without external dependencies and consumable via API.
 
+
+# Recent Changes
+
+- Minor ui changes to improve readability
+- Fix behavior of "Available Options" list to be reset to "Keep" after save.
+
 ## Introduction
 
 Usually the design work is embedded in a wholesome work process where any design is part of a more complex product. This plugin intents to help you keeping track of changes to your design by simply attaching a version number to your nodes.
@@ -12,7 +18,7 @@ And it also allows you to reference the version in other tools and assets like i
 
 This plugin has **no** external dependencies, the version information is saved in the current document.
 
->> Be aware the meaning of the word "backed" depends highly on your project setup. In a progressive web app the "backend" is usually a front-end implementation whereas backend in a classical server-based webpage will be the actual server-side webapp implementation.
+>> Be aware the meaning of the word "backend" depends highly on your project setup. In a progressive web app the "backend" is usually a front-end implementation whereas backend in a classical server-based webpage will be the actual server-side webapp implementation.
 
 ## How to use this Plugin?
 

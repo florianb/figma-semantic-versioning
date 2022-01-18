@@ -1,28 +1,90 @@
+/* fakecss:/home/florian-neumann/github/figma-semantic-versioning/lib/Settings.esbuild-svelte-fake-css */
+details.svelte-w92wh4 {
+  margin-top: 2ex;
+  padding: 1.2ex;
+  border-top: 1px solid #e2e2e2;
+  font-size: 10px;
+  color: #888;
+}
+summary.svelte-w92wh4 {
+  font-weight: 600;
+  margin-bottom: 1ex;
+}
+details.svelte-w92wh4:hover {
+  color: #333;
+}
+
+/* fakecss:/home/florian-neumann/github/figma-semantic-versioning/lib/NodeList.esbuild-svelte-fake-css */
+table.svelte-15gjnjl.svelte-15gjnjl.svelte-15gjnjl {
+  font-size: 11px;
+  font-weight: 400;
+  text-align: left;
+  table-layout: fixed;
+  width: 100%;
+}
+th.svelte-15gjnjl.svelte-15gjnjl.svelte-15gjnjl {
+  font-size: 10px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 2px;
+}
+table.svelte-15gjnjl > tr.svelte-15gjnjl > th.svelte-15gjnjl {
+  width: 70%;
+}
+.version.svelte-15gjnjl.svelte-15gjnjl.svelte-15gjnjl {
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
 /* fakecss:/home/florian-neumann/github/figma-semantic-versioning/lib/ActionList.esbuild-svelte-fake-css */
-.container.svelte-1m95hjm {
+.container.svelte-vdjdgi.svelte-vdjdgi {
   padding: 2px;
 }
-input.svelte-1m95hjm {
+.container.svelte-vdjdgi h4.svelte-vdjdgi {
+  font-size: 10px;
+  color: #777;
+  margin-top: 0;
+  margin-bottom: 1ex;
+}
+input.svelte-vdjdgi.svelte-vdjdgi {
   vertical-align: super;
 }
-label.svelte-1m95hjm {
+label.svelte-vdjdgi.svelte-vdjdgi {
   display: inline-block;
+  margin-left: 0.6em;
 }
-.list-element.svelte-1m95hjm {
-  margin-bottom: 6px;
+.list-element.svelte-vdjdgi.svelte-vdjdgi {
+  padding: 1ex 0.4ex 0.8ex 0.4ex;
+  margin-bottom: 0.8ex;
 }
-.header.svelte-1m95hjm {
+.list-element.svelte-vdjdgi.svelte-vdjdgi:hover {
+  background-color: #daebf7;
+}
+.header.svelte-vdjdgi.svelte-vdjdgi {
   font-size: 10px;
   font-weight: 600;
   color: #444;
 }
-.description.svelte-1m95hjm {
+.description.svelte-vdjdgi.svelte-vdjdgi {
   font-weight: 400;
   color: #555;
 }
-.body.svelte-1m95hjm {
+.body.svelte-vdjdgi.svelte-vdjdgi {
   margin-top: 1px;
   font-size: 14px;
+}
+.buttons.svelte-vdjdgi.svelte-vdjdgi {
+  display: flex;
+  justify-content: center;
+  margin: 0 1ex 0 1ex;
+  padding: 0.2ex;
+}
+.buttons.svelte-vdjdgi button.svelte-vdjdgi {
+  font-size: 14px;
+  display: inline-block;
+  padding: 0.35em 1.2em;
+  margin: 0 0.3em 0.3em 0;
+  text-align: center;
+  transition: all 0.5s;
 }
 
 /* fakecss:/home/florian-neumann/github/figma-semantic-versioning/lib/App.esbuild-svelte-fake-css */
