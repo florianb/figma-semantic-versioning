@@ -84,13 +84,13 @@ Checking this option enables a "pre-release" path for your versioning which adds
 
 Unchecking this option changes only the available options for you next version change and does **not** automatically change any saved versions in the document.
 
-### Use version postfix at Node names
+### Use version appendix at Node names
 
-Checking this option enables `@`-prefixed version postfixes for the node names. When a version get's saved an `@`-symbol gets added to node name (if it not already exists) and the saved version get's appended to the name.
+Checking this option enables `@`-prefixed version appendices for the node names. When you save a version, an `@`-symbol will be added to node name (if it not already exists) and the saved version is appended to the name.
 
-This feature also adds two more version options "From Name" and "To Name" to the user interface (if the version postfix and the stored version differ) allowing you to f.e. manually set the version. Please keep in mind that `0.x` versions for initial development are not supported.
+This feature also adds two more version options "From Appendix" and "To Appendix" to the user interface (if the version appendix and the internal version of that node differ) allowing you to f.e. manually set or remove the version. Please keep in mind that `0.x` versions are not supported by this plugin.
 
-Unchecking this option does currently not remove any version postfixes, if you want to remove any version postfixes from your nodes you will have to do this manually at the moment.
+Unchecking this option does currently not remove any version appendices. If you want to remove any version appendices from your nodes you will have to do this manually at the moment.
 
 ## API
 
