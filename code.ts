@@ -5,6 +5,12 @@ import Plugin from './lib/plugin.js';
 // @ts-expect-error: TS2307
 import ui from './ui.html';
 
+interface SettingsObject {
+	useRfc?: boolean;
+	updateName?: boolean;
+	useCommitMessage?: boolean;
+}
+
 const versionRegex = /@(\d+\.\d+\.\d+(-rfc\.\d+)?)$/im;
 
 function deriveActions(node: BaseNode, version?: Version, useRfc?: boolean, updateName?: boolean): ActionObject[] {
@@ -17,7 +23,7 @@ function deriveActions(node: BaseNode, version?: Version, useRfc?: boolean, upda
 	if (version) {
 		const options
 			= version
-				.deriveOptions(useRfc === true)
+				.deriveOptions(useRfc)
 				.map(versionObject => {
 					const newVersion = new Version(versionObject);
 					const label = version.elevatedLevel(newVersion) || 'keep';
@@ -28,14 +34,14 @@ function deriveActions(node: BaseNode, version?: Version, useRfc?: boolean, upda
 
 		actions.push(...options);
 	} else {
-		const initialVersion = new Version(undefined, useRfc === true);
+		const initialVersion = new Version(undefined, useRfc);
 		const action = new Action(node, initialVersion, 'initial');
-		
+
 		actions.push(action.toObject());
 	}
 
 	const hasOneVersionUndefined = (!versionFromName !== !version);
-	const hasDifferentVersion = (!!versionFromName && !!version && !version.equals(versionFromName));
+	const hasDifferentVersion = (Boolean(versionFromName) && Boolean(version) && !version.equals(versionFromName));
 	if (updateName && (hasOneVersionUndefined || hasDifferentVersion)) {
 		actions.push({
 			nodeId: node.id,
@@ -78,13 +84,24 @@ function updateVersionInName(node: BaseNode, version?: Version | string): void {
 	}
 }
 
+const selectionChange = (): void => {
+	updateUi(true);
+};
+
+figma.on('selectionchange', selectionChange);
+figma.on('close', () => {
+	figma.off('selectionchange', selectionChange);
+});
+
+// eslint-disable-next-line unicorn/prefer-add-event-listener
 figma.ui.onmessage = message => {
 	switch (message.type) {
-		case 'settings':
-			const settings = {
+		case 'settings': {
+			const settings: SettingsObject = {
 				useRfc: false,
+				useCommitMessage: false,
 				updateName: false,
-				...Plugin.getConfig('settings'),
+				...(Plugin.getConfig('settings') as SettingsObject),
 			};
 
 			figma.ui.postMessage({
@@ -93,18 +110,22 @@ figma.ui.onmessage = message => {
 			});
 
 			break;
-		case 'updateSettings':
-			const oldSettings = Plugin.getConfig('settings') || {};
-			const newSettings = {...oldSettings, ...message.settings};
+		}
+
+		case 'updateSettings': {
+			const oldSettings = (Plugin.getConfig('settings') || {}) as SettingsObject;
+			const newSettings = {...oldSettings, ...(message.settings as SettingsObject)};
 
 			Plugin.setConfig('settings', newSettings);
 
 			updateUi();
 			break;
-		case 'updateVersion':
-			const action = message.action
+		}
+
+		case 'updateVersion': {
+			const action = message.action as ActionObject;
 			const node = figma.getNodeById(action.nodeId);
-			const {updateName} = Plugin.getConfig('settings') || {};
+			const {updateName} = (Plugin.getConfig('settings') || {}) as SettingsObject;
 			const version = action.version ? new Version(action.version) : '';
 
 			Plugin.setVersion(node, version);
@@ -114,26 +135,30 @@ figma.ui.onmessage = message => {
 
 			updateUi();
 			break;
-		default:
+		}
+
+		default: {
+			break;
+		}
 	}
 };
 
-function updateUi() {
+function updateUi(hasSelectionChanged = false) {
 	const page = figma.currentPage;
 	const selection = page.selection;
 
 	if (selection.length > 0) {
 		let message = null;
-		const uiOptions = {};
+		const uiOptions: ShowUIOptions = {};
 
 		if (selection.length === 1) {
-			const {useRfc, updateName} = Plugin.getConfig('settings') || {};
-			const node = selection[0];
+			const {useRfc, updateName} = (Plugin.getConfig('settings') || {}) as SettingsObject;
+			const node = selection[0] as BaseNode;
 			const version = Plugin.getVersion(node);
 
 			const actions = deriveActions(node, version, useRfc, updateName);
 
-			uiOptions['title'] = node.name;
+			uiOptions.title = node.name;
 			message = {
 				type: 'actions',
 				data: actions,
@@ -159,7 +184,9 @@ function updateUi() {
 		figma.showUI(ui, uiOptions);
 		figma.ui.postMessage(message);
 	} else {
-		figma.closePlugin('Semantic Versioning requires selected Nodes.');
+		const closeMessage = hasSelectionChanged ? undefined : 'Semantic Versioning requires selected Nodes.';
+
+		figma.closePlugin(closeMessage);
 	}
 }
 

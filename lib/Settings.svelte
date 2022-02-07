@@ -1,5 +1,6 @@
 <script>
 	export let useRfc = null;
+	export let useCommitMessage = null;
 	export let updateName = null;
 
 	function setUseRfc(useRfc) {
@@ -29,6 +30,20 @@
 			"*"
 		);
 	}
+
+	function setUseCommitMessage(useCommitMessage) {
+		parent.postMessage(
+			{
+				pluginMessage: {
+					type: "updateSettings",
+					settings: {
+						useCommitMessage,
+					},
+				},
+			},
+			"*"
+		);
+	}
 </script>
 
 <details>
@@ -42,7 +57,19 @@
 				bind:checked={useRfc}
 				on:change={setUseRfc(useRfc)}
 			/>
-			<label for="use-rfc">Use "request for comments" workflow</label>
+			<label for="use-rfc">Use "request for comments" workflow.</label>
+		</div>
+	{/if}
+
+	{#if useCommitMessage !== null}
+		<div>
+			<input
+				type="checkbox"
+				id="use-commit-message"
+				bind:checked={useCommitMessage}
+				on:change={setUseCommitMessage(useCommitMessage)}
+			/>
+			<label for="use-commit-message">Use commit messages.</label>
 		</div>
 	{/if}
 
@@ -55,7 +82,7 @@
 				on:change={setUpdateName(updateName)}
 			/>
 			<label for="update-name"
-				>Use version appendix (f.e. "@1.0.0") at Node names</label
+				>Use version appendix (f.e. "@1.0.0") at Node names.</label
 			>
 		</div>
 	{/if}

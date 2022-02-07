@@ -1,6 +1,87 @@
+<script>
+	export let actions = [];
+	let selection = "keep";
+	let commitMessage = null;
+	let useCommitMessage = false;
+
+	const labels = {
+		keep: {
+			label: "Keep",
+			description: "",
+		},
+		initial: {
+			label: "Initial",
+			description: "Start versioning for node",
+		},
+		major: {
+			label: "Major",
+			description: "Change may break backend",
+		},
+		minor: {
+			label: "Minor",
+			description: "Change may affect backend",
+		},
+		patch: {
+			label: "Patch",
+			description: "Fix not affecting backend",
+		},
+		rfc: {
+			label: "Request for Comments",
+			description: "New iteration for draft",
+		},
+		release: {
+			label: "Release",
+			description: "",
+		},
+		fromName: {
+			label: "From Appendix",
+			description: "Set inner version by appendix",
+		},
+		toName: {
+			label: "To Appendix",
+			description: "Set appendix by inner version",
+		},
+	};
+
+	function currentVersionFor(label) {
+		const currentAction = actions.find((a) => a.label === label);
+
+		if (label === "toName") {
+			return currentAction.nameVersion;
+		} else {
+			const action = actions.find((a) => a.label === "keep");
+
+			return action.version || "not versioned";
+		}
+	}
+
+	function isCommitMessageDisabled(selection) {
+		return selection === "keep";
+	}
+
+	function saveAction(selection, actions) {
+		const action = actions.find((a) => a.label === selection);
+
+		console.log(selection, actions, action);
+
+		parent.postMessage(
+			{
+				pluginMessage: {
+					type: "updateVersion",
+					commitMessage: useCommitMessage ? commitMessage : undefined,
+					action,
+				},
+			},
+			"*"
+		);
+
+		selection = "keep";
+	}
+</script>
+
 <div class="container">
 	<h4>Available Options</h4>
-	{#each actions as action} 
+	{#each actions as action}
 		<div class="list-element">
 			<input
 				type="radio"
@@ -8,33 +89,45 @@
 				id={action.label}
 				value={action.label}
 				bind:group={selection}
-			>
+			/>
 			<label for={action.label}>
 				<div class="header">
 					{labels[action.label].label}
 					{#if labels[action.label].description}
-						<span class="description">&middot;&nbsp;{labels[action.label].description}</span>
+						<span class="description"
+							>&middot;&nbsp;{labels[action.label].description}</span
+						>
 					{/if}
 				</div>
 				<div class="body">
-					{#if action.label !== 'keep'}
-						{#if action.label === 'toName'}@{/if}{currentVersionFor(action.label)} &rarr;
+					{#if action.label !== "keep"}
+						{#if action.label === "toName"}@{/if}{currentVersionFor(
+							action.label
+						)} &rarr;
 					{/if}
-					{#if action.label === 'toName' && action.version}@{/if}{action.version || 'not versioned'}
+					{#if action.label === "toName" && action.version}@{/if}{action.version ||
+						"not versioned"}
 				</div>
 			</label>
 		</div>
 	{/each}
 </div>
 
-<div class="buttons">
+{#if useCommitMessage}
+	<textarea
+		bind:value={commitMessage}
+		disabled={isCommitMessageDisabled(selection)}
+	/>
+{/if}
+
+<div class="centered">
 	<button
 		on:click={saveAction(selection, actions)}
-		disabled={!selection || selection === 'keep'}>
+		disabled={!selection || selection === "keep"}
+	>
 		save
 	</button>
 </div>
-
 
 <style>
 	.container {
@@ -82,7 +175,7 @@
 		font-size: 14px;
 	}
 
-	.buttons {
+	.centered {
 		display: flex;
 		justify-content: center;
 
@@ -90,7 +183,7 @@
 		padding: 0.2ex;
 	}
 
-	.buttons button {
+	.centered button {
 		font-size: 14px;
 		display: inline-block;
 		padding: 0.35em 1.2em;
@@ -99,74 +192,3 @@
 		transition: all 0.5s;
 	}
 </style>
-
-
-<script>
-	export let actions = [];
-	let selection = 'keep';
-	const labels = {
-		keep: {
-			label: 'Keep',
-			description: '',
-		},
-		initial: {
-			label: 'Initial',
-			description: 'Start versioning for node',
-		},
-		major: {
-			label: 'Major',
-			description: 'Change may break backend',
-		},
-		minor: {
-			label: 'Minor',
-			description: 'Change may affect backend',
-		},
-		patch: {
-				label: 'Patch',
-			description: 'Fix not affecting backend',
-		},
-		rfc: {
-			label: 'Request for Comments',
-			description: 'New iteration for draft',
-		},
-		release: {
-			label: 'Release',
-			description: '',
-		},
-		fromName: {
-			label: 'From Appendix',
-			description: 'Set inner version by appendix',
-		},
-		toName: {
-			label: 'To Appendix',
-			description: 'Set appendix by inner version',
-		},
-	};
-
-	function currentVersionFor(label) {
-		const currentAction = actions.find(a => a.label === label);
-
-		if (label === 'toName') {
-			return currentAction.nameVersion;
-		} else {
-			const action = actions.find(a => a.label === 'keep');
-
-			return action.version || 'not versioned';
-		}
-	}
-
-	function saveAction(selection, actions) {
-		const action = actions.find(a => a.label === selection);
-
-		console.log(selection, actions, action);
-
-		parent.postMessage({
-			pluginMessage: {
-				type: 'updateVersion',
-				action,
-			}
-		}, '*');
-
-		selection = 'keep';
-	}
-</script>

@@ -253,49 +253,49 @@ table.svelte-15gjnjl > tr.svelte-15gjnjl > th.svelte-15gjnjl {
 }
 
 /* fakecss:/home/florian-neumann/github/figma-semantic-versioning/lib/ActionList.esbuild-svelte-fake-css */
-.container.svelte-vdjdgi.svelte-vdjdgi {
+.container.svelte-c3lwu6.svelte-c3lwu6 {
   padding: 2px;
 }
-.container.svelte-vdjdgi h4.svelte-vdjdgi {
+.container.svelte-c3lwu6 h4.svelte-c3lwu6 {
   font-size: 10px;
   color: #777;
   margin-top: 0;
   margin-bottom: 1ex;
 }
-input.svelte-vdjdgi.svelte-vdjdgi {
+input.svelte-c3lwu6.svelte-c3lwu6 {
   vertical-align: super;
 }
-label.svelte-vdjdgi.svelte-vdjdgi {
+label.svelte-c3lwu6.svelte-c3lwu6 {
   display: inline-block;
   margin-left: 0.6em;
 }
-.list-element.svelte-vdjdgi.svelte-vdjdgi {
+.list-element.svelte-c3lwu6.svelte-c3lwu6 {
   padding: 1ex 0.4ex 0.8ex 0.4ex;
   margin-bottom: 0.8ex;
 }
-.list-element.svelte-vdjdgi.svelte-vdjdgi:hover {
+.list-element.svelte-c3lwu6.svelte-c3lwu6:hover {
   background-color: #daebf7;
 }
-.header.svelte-vdjdgi.svelte-vdjdgi {
+.header.svelte-c3lwu6.svelte-c3lwu6 {
   font-size: 10px;
   font-weight: 600;
   color: #444;
 }
-.description.svelte-vdjdgi.svelte-vdjdgi {
+.description.svelte-c3lwu6.svelte-c3lwu6 {
   font-weight: 400;
   color: #555;
 }
-.body.svelte-vdjdgi.svelte-vdjdgi {
+.body.svelte-c3lwu6.svelte-c3lwu6 {
   margin-top: 1px;
   font-size: 14px;
 }
-.buttons.svelte-vdjdgi.svelte-vdjdgi {
+.centered.svelte-c3lwu6.svelte-c3lwu6 {
   display: flex;
   justify-content: center;
   margin: 0 1ex 0 1ex;
   padding: 0.2ex;
 }
-.buttons.svelte-vdjdgi button.svelte-vdjdgi {
+.centered.svelte-c3lwu6 button.svelte-c3lwu6 {
   font-size: 14px;
   display: inline-block;
   padding: 0.35em 1.2em;
@@ -305,7 +305,7 @@ label.svelte-vdjdgi.svelte-vdjdgi {
 }
 
 /* fakecss:/home/florian-neumann/github/figma-semantic-versioning/lib/App.esbuild-svelte-fake-css */
-.body.svelte-lg7e9c {
+.body.svelte-1uwbz41 {
   font-family: Inter, sans-serif;
   font-feature-settings: "liga", "calt";
   font-size: 12px;
@@ -387,6 +387,9 @@ label.svelte-vdjdgi.svelte-vdjdgi {
     data = "" + data;
     if (text2.wholeText !== data)
       text2.data = data;
+  }
+  function set_input_value(input, value) {
+    input.value = value == null ? "" : value;
   }
   var current_component;
   function set_current_component(component) {
@@ -651,6 +654,55 @@ label.svelte-vdjdgi.svelte-vdjdgi {
   };
 
   // lib/Settings.svelte
+  function create_if_block_2(ctx) {
+    let div;
+    let input;
+    let t0;
+    let label;
+    let mounted;
+    let dispose;
+    return {
+      c() {
+        div = element("div");
+        input = element("input");
+        t0 = space();
+        label = element("label");
+        label.textContent = 'Use "request for comments" workflow.';
+        attr(input, "type", "checkbox");
+        attr(input, "id", "use-rfc");
+        attr(label, "for", "use-rfc");
+      },
+      m(target, anchor) {
+        insert(target, div, anchor);
+        append(div, input);
+        input.checked = ctx[0];
+        append(div, t0);
+        append(div, label);
+        if (!mounted) {
+          dispose = [
+            listen(input, "change", ctx[3]),
+            listen(input, "change", function() {
+              if (is_function(setUseRfc(ctx[0])))
+                setUseRfc(ctx[0]).apply(this, arguments);
+            })
+          ];
+          mounted = true;
+        }
+      },
+      p(new_ctx, dirty) {
+        ctx = new_ctx;
+        if (dirty & 1) {
+          input.checked = ctx[0];
+        }
+      },
+      d(detaching) {
+        if (detaching)
+          detach(div);
+        mounted = false;
+        run_all(dispose);
+      }
+    };
+  }
   function create_if_block_1(ctx) {
     let div;
     let input;
@@ -664,23 +716,23 @@ label.svelte-vdjdgi.svelte-vdjdgi {
         input = element("input");
         t0 = space();
         label = element("label");
-        label.textContent = 'Use "request for comments" workflow';
+        label.textContent = "Use commit messages.";
         attr(input, "type", "checkbox");
-        attr(input, "id", "use-rfc");
-        attr(label, "for", "use-rfc");
+        attr(input, "id", "use-commit-message");
+        attr(label, "for", "use-commit-message");
       },
       m(target, anchor) {
         insert(target, div, anchor);
         append(div, input);
-        input.checked = ctx[0];
+        input.checked = ctx[1];
         append(div, t0);
         append(div, label);
         if (!mounted) {
           dispose = [
-            listen(input, "change", ctx[2]),
+            listen(input, "change", ctx[4]),
             listen(input, "change", function() {
-              if (is_function(setUseRfc(ctx[0])))
-                setUseRfc(ctx[0]).apply(this, arguments);
+              if (is_function(setUseCommitMessage(ctx[1])))
+                setUseCommitMessage(ctx[1]).apply(this, arguments);
             })
           ];
           mounted = true;
@@ -688,8 +740,8 @@ label.svelte-vdjdgi.svelte-vdjdgi {
       },
       p(new_ctx, dirty) {
         ctx = new_ctx;
-        if (dirty & 1) {
-          input.checked = ctx[0];
+        if (dirty & 2) {
+          input.checked = ctx[1];
         }
       },
       d(detaching) {
@@ -713,7 +765,7 @@ label.svelte-vdjdgi.svelte-vdjdgi {
         input = element("input");
         t0 = space();
         label = element("label");
-        label.textContent = 'Use version appendix (f.e. "@1.0.0") at Node names';
+        label.textContent = 'Use version appendix (f.e. "@1.0.0") at Node names.';
         attr(input, "type", "checkbox");
         attr(input, "id", "update-name");
         attr(label, "for", "update-name");
@@ -721,15 +773,15 @@ label.svelte-vdjdgi.svelte-vdjdgi {
       m(target, anchor) {
         insert(target, div, anchor);
         append(div, input);
-        input.checked = ctx[1];
+        input.checked = ctx[2];
         append(div, t0);
         append(div, label);
         if (!mounted) {
           dispose = [
-            listen(input, "change", ctx[3]),
+            listen(input, "change", ctx[5]),
             listen(input, "change", function() {
-              if (is_function(setUpdateName(ctx[1])))
-                setUpdateName(ctx[1]).apply(this, arguments);
+              if (is_function(setUpdateName(ctx[2])))
+                setUpdateName(ctx[2]).apply(this, arguments);
             })
           ];
           mounted = true;
@@ -737,8 +789,8 @@ label.svelte-vdjdgi.svelte-vdjdgi {
       },
       p(new_ctx, dirty) {
         ctx = new_ctx;
-        if (dirty & 2) {
-          input.checked = ctx[1];
+        if (dirty & 4) {
+          input.checked = ctx[2];
         }
       },
       d(detaching) {
@@ -754,8 +806,10 @@ label.svelte-vdjdgi.svelte-vdjdgi {
     let summary;
     let t1;
     let t2;
-    let if_block0 = ctx[0] !== null && create_if_block_1(ctx);
-    let if_block1 = ctx[1] !== null && create_if_block(ctx);
+    let t3;
+    let if_block0 = ctx[0] !== null && create_if_block_2(ctx);
+    let if_block1 = ctx[1] !== null && create_if_block_1(ctx);
+    let if_block2 = ctx[2] !== null && create_if_block(ctx);
     return {
       c() {
         details = element("details");
@@ -767,6 +821,9 @@ label.svelte-vdjdgi.svelte-vdjdgi {
         t2 = space();
         if (if_block1)
           if_block1.c();
+        t3 = space();
+        if (if_block2)
+          if_block2.c();
         attr(summary, "class", "svelte-w92wh4");
         attr(details, "class", "svelte-w92wh4");
       },
@@ -779,13 +836,16 @@ label.svelte-vdjdgi.svelte-vdjdgi {
         append(details, t2);
         if (if_block1)
           if_block1.m(details, null);
+        append(details, t3);
+        if (if_block2)
+          if_block2.m(details, null);
       },
       p(ctx2, [dirty]) {
         if (ctx2[0] !== null) {
           if (if_block0) {
             if_block0.p(ctx2, dirty);
           } else {
-            if_block0 = create_if_block_1(ctx2);
+            if_block0 = create_if_block_2(ctx2);
             if_block0.c();
             if_block0.m(details, t2);
           }
@@ -797,13 +857,25 @@ label.svelte-vdjdgi.svelte-vdjdgi {
           if (if_block1) {
             if_block1.p(ctx2, dirty);
           } else {
-            if_block1 = create_if_block(ctx2);
+            if_block1 = create_if_block_1(ctx2);
             if_block1.c();
-            if_block1.m(details, null);
+            if_block1.m(details, t3);
           }
         } else if (if_block1) {
           if_block1.d(1);
           if_block1 = null;
+        }
+        if (ctx2[2] !== null) {
+          if (if_block2) {
+            if_block2.p(ctx2, dirty);
+          } else {
+            if_block2 = create_if_block(ctx2);
+            if_block2.c();
+            if_block2.m(details, null);
+          }
+        } else if (if_block2) {
+          if_block2.d(1);
+          if_block2 = null;
         }
       },
       i: noop,
@@ -815,6 +887,8 @@ label.svelte-vdjdgi.svelte-vdjdgi {
           if_block0.d();
         if (if_block1)
           if_block1.d();
+        if (if_block2)
+          if_block2.d();
       }
     };
   }
@@ -834,29 +908,55 @@ label.svelte-vdjdgi.svelte-vdjdgi {
       }
     }, "*");
   }
+  function setUseCommitMessage(useCommitMessage2) {
+    parent.postMessage({
+      pluginMessage: {
+        type: "updateSettings",
+        settings: { useCommitMessage: useCommitMessage2 }
+      }
+    }, "*");
+  }
   function instance($self, $props, $invalidate) {
     let { useRfc = null } = $props;
+    let { useCommitMessage: useCommitMessage2 = null } = $props;
     let { updateName = null } = $props;
     function input_change_handler() {
       useRfc = this.checked;
       $invalidate(0, useRfc);
     }
     function input_change_handler_1() {
+      useCommitMessage2 = this.checked;
+      $invalidate(1, useCommitMessage2);
+    }
+    function input_change_handler_2() {
       updateName = this.checked;
-      $invalidate(1, updateName);
+      $invalidate(2, updateName);
     }
     $self.$set = ($props2) => {
       if ("useRfc" in $props2)
         $invalidate(0, useRfc = $props2.useRfc);
+      if ("useCommitMessage" in $props2)
+        $invalidate(1, useCommitMessage2 = $props2.useCommitMessage);
       if ("updateName" in $props2)
-        $invalidate(1, updateName = $props2.updateName);
+        $invalidate(2, updateName = $props2.updateName);
     };
-    return [useRfc, updateName, input_change_handler, input_change_handler_1];
+    return [
+      useRfc,
+      useCommitMessage2,
+      updateName,
+      input_change_handler,
+      input_change_handler_1,
+      input_change_handler_2
+    ];
   }
   var Settings = class extends SvelteComponent {
     constructor(options) {
       super();
-      init(this, options, instance, create_fragment, safe_not_equal, { useRfc: 0, updateName: 1 });
+      init(this, options, instance, create_fragment, safe_not_equal, {
+        useRfc: 0,
+        useCommitMessage: 1,
+        updateName: 2
+      });
     }
   };
   var Settings_default = Settings;
@@ -987,20 +1087,20 @@ label.svelte-vdjdgi.svelte-vdjdgi {
   // lib/ActionList.svelte
   function get_each_context2(ctx, list, i) {
     const child_ctx = ctx.slice();
-    child_ctx[6] = list[i];
+    child_ctx[9] = list[i];
     return child_ctx;
   }
-  function create_if_block_3(ctx) {
+  function create_if_block_4(ctx) {
     let span;
     let t0;
-    let t1_value = ctx[2][ctx[6].label].description + "";
+    let t1_value = ctx[3][ctx[9].label].description + "";
     let t1;
     return {
       c() {
         span = element("span");
         t0 = text("\\xB7\\xA0");
         t1 = text(t1_value);
-        attr(span, "class", "description svelte-vdjdgi");
+        attr(span, "class", "description svelte-c3lwu6");
       },
       m(target, anchor) {
         insert(target, span, anchor);
@@ -1008,7 +1108,7 @@ label.svelte-vdjdgi.svelte-vdjdgi {
         append(span, t1);
       },
       p(ctx2, dirty) {
-        if (dirty & 1 && t1_value !== (t1_value = ctx2[2][ctx2[6].label].description + ""))
+        if (dirty & 1 && t1_value !== (t1_value = ctx2[3][ctx2[9].label].description + ""))
           set_data(t1, t1_value);
       },
       d(detaching) {
@@ -1017,11 +1117,11 @@ label.svelte-vdjdgi.svelte-vdjdgi {
       }
     };
   }
-  function create_if_block_12(ctx) {
-    let t0_value = ctx[3](ctx[6].label) + "";
+  function create_if_block_22(ctx) {
+    let t0_value = ctx[4](ctx[9].label) + "";
     let t0;
     let t1;
-    let if_block = ctx[6].label === "toName" && create_if_block_2(ctx);
+    let if_block = ctx[9].label === "toName" && create_if_block_3(ctx);
     return {
       c() {
         if (if_block)
@@ -1036,10 +1136,10 @@ label.svelte-vdjdgi.svelte-vdjdgi {
         insert(target, t1, anchor);
       },
       p(ctx2, dirty) {
-        if (ctx2[6].label === "toName") {
+        if (ctx2[9].label === "toName") {
           if (if_block) {
           } else {
-            if_block = create_if_block_2(ctx2);
+            if_block = create_if_block_3(ctx2);
             if_block.c();
             if_block.m(t0.parentNode, t0);
           }
@@ -1047,7 +1147,7 @@ label.svelte-vdjdgi.svelte-vdjdgi {
           if_block.d(1);
           if_block = null;
         }
-        if (dirty & 1 && t0_value !== (t0_value = ctx2[3](ctx2[6].label) + ""))
+        if (dirty & 1 && t0_value !== (t0_value = ctx2[4](ctx2[9].label) + ""))
           set_data(t0, t0_value);
       },
       d(detaching) {
@@ -1060,7 +1160,7 @@ label.svelte-vdjdgi.svelte-vdjdgi {
       }
     };
   }
-  function create_if_block_2(ctx) {
+  function create_if_block_3(ctx) {
     let t;
     return {
       c() {
@@ -1075,7 +1175,7 @@ label.svelte-vdjdgi.svelte-vdjdgi {
       }
     };
   }
-  function create_if_block2(ctx) {
+  function create_if_block_12(ctx) {
     let t;
     return {
       c() {
@@ -1098,21 +1198,21 @@ label.svelte-vdjdgi.svelte-vdjdgi {
     let t0;
     let label;
     let div0;
-    let t1_value = ctx[2][ctx[6].label].label + "";
+    let t1_value = ctx[3][ctx[9].label].label + "";
     let t1;
     let t2;
     let t3;
     let div1;
     let t4;
-    let t5_value = (ctx[6].version || "not versioned") + "";
+    let t5_value = (ctx[9].version || "not versioned") + "";
     let t5;
     let label_for_value;
     let t6;
     let mounted;
     let dispose;
-    let if_block0 = ctx[2][ctx[6].label].description && create_if_block_3(ctx);
-    let if_block1 = ctx[6].label !== "keep" && create_if_block_12(ctx);
-    let if_block2 = ctx[6].label === "toName" && ctx[6].version && create_if_block2(ctx);
+    let if_block0 = ctx[3][ctx[9].label].description && create_if_block_4(ctx);
+    let if_block1 = ctx[9].label !== "keep" && create_if_block_22(ctx);
+    let if_block2 = ctx[9].label === "toName" && ctx[9].version && create_if_block_12(ctx);
     return {
       c() {
         div2 = element("div");
@@ -1135,16 +1235,16 @@ label.svelte-vdjdgi.svelte-vdjdgi {
         t6 = space();
         attr(input, "type", "radio");
         attr(input, "name", "action");
-        attr(input, "id", input_id_value = ctx[6].label);
-        input.__value = input_value_value = ctx[6].label;
+        attr(input, "id", input_id_value = ctx[9].label);
+        input.__value = input_value_value = ctx[9].label;
         input.value = input.__value;
-        attr(input, "class", "svelte-vdjdgi");
-        ctx[5][0].push(input);
-        attr(div0, "class", "header svelte-vdjdgi");
-        attr(div1, "class", "body svelte-vdjdgi");
-        attr(label, "for", label_for_value = ctx[6].label);
-        attr(label, "class", "svelte-vdjdgi");
-        attr(div2, "class", "list-element svelte-vdjdgi");
+        attr(input, "class", "svelte-c3lwu6");
+        ctx[7][0].push(input);
+        attr(div0, "class", "header svelte-c3lwu6");
+        attr(div1, "class", "body svelte-c3lwu6");
+        attr(label, "for", label_for_value = ctx[9].label);
+        attr(label, "class", "svelte-c3lwu6");
+        attr(div2, "class", "list-element svelte-c3lwu6");
       },
       m(target, anchor) {
         insert(target, div2, anchor);
@@ -1167,28 +1267,28 @@ label.svelte-vdjdgi.svelte-vdjdgi {
         append(div1, t5);
         append(div2, t6);
         if (!mounted) {
-          dispose = listen(input, "change", ctx[4]);
+          dispose = listen(input, "change", ctx[6]);
           mounted = true;
         }
       },
       p(ctx2, dirty) {
-        if (dirty & 1 && input_id_value !== (input_id_value = ctx2[6].label)) {
+        if (dirty & 1 && input_id_value !== (input_id_value = ctx2[9].label)) {
           attr(input, "id", input_id_value);
         }
-        if (dirty & 1 && input_value_value !== (input_value_value = ctx2[6].label)) {
+        if (dirty & 1 && input_value_value !== (input_value_value = ctx2[9].label)) {
           input.__value = input_value_value;
           input.value = input.__value;
         }
         if (dirty & 2) {
           input.checked = input.__value === ctx2[1];
         }
-        if (dirty & 1 && t1_value !== (t1_value = ctx2[2][ctx2[6].label].label + ""))
+        if (dirty & 1 && t1_value !== (t1_value = ctx2[3][ctx2[9].label].label + ""))
           set_data(t1, t1_value);
-        if (ctx2[2][ctx2[6].label].description) {
+        if (ctx2[3][ctx2[9].label].description) {
           if (if_block0) {
             if_block0.p(ctx2, dirty);
           } else {
-            if_block0 = create_if_block_3(ctx2);
+            if_block0 = create_if_block_4(ctx2);
             if_block0.c();
             if_block0.m(div0, null);
           }
@@ -1196,11 +1296,11 @@ label.svelte-vdjdgi.svelte-vdjdgi {
           if_block0.d(1);
           if_block0 = null;
         }
-        if (ctx2[6].label !== "keep") {
+        if (ctx2[9].label !== "keep") {
           if (if_block1) {
             if_block1.p(ctx2, dirty);
           } else {
-            if_block1 = create_if_block_12(ctx2);
+            if_block1 = create_if_block_22(ctx2);
             if_block1.c();
             if_block1.m(div1, t4);
           }
@@ -1208,10 +1308,10 @@ label.svelte-vdjdgi.svelte-vdjdgi {
           if_block1.d(1);
           if_block1 = null;
         }
-        if (ctx2[6].label === "toName" && ctx2[6].version) {
+        if (ctx2[9].label === "toName" && ctx2[9].version) {
           if (if_block2) {
           } else {
-            if_block2 = create_if_block2(ctx2);
+            if_block2 = create_if_block_12(ctx2);
             if_block2.c();
             if_block2.m(div1, t5);
           }
@@ -1219,16 +1319,16 @@ label.svelte-vdjdgi.svelte-vdjdgi {
           if_block2.d(1);
           if_block2 = null;
         }
-        if (dirty & 1 && t5_value !== (t5_value = (ctx2[6].version || "not versioned") + ""))
+        if (dirty & 1 && t5_value !== (t5_value = (ctx2[9].version || "not versioned") + ""))
           set_data(t5, t5_value);
-        if (dirty & 1 && label_for_value !== (label_for_value = ctx2[6].label)) {
+        if (dirty & 1 && label_for_value !== (label_for_value = ctx2[9].label)) {
           attr(label, "for", label_for_value);
         }
       },
       d(detaching) {
         if (detaching)
           detach(div2);
-        ctx[5][0].splice(ctx[5][0].indexOf(input), 1);
+        ctx[7][0].splice(ctx[7][0].indexOf(input), 1);
         if (if_block0)
           if_block0.d();
         if (if_block1)
@@ -1240,14 +1340,49 @@ label.svelte-vdjdgi.svelte-vdjdgi {
       }
     };
   }
+  function create_if_block2(ctx) {
+    let textarea;
+    let textarea_disabled_value;
+    let mounted;
+    let dispose;
+    return {
+      c() {
+        textarea = element("textarea");
+        textarea.disabled = textarea_disabled_value = isCommitMessageDisabled(ctx[1]);
+      },
+      m(target, anchor) {
+        insert(target, textarea, anchor);
+        set_input_value(textarea, ctx[2]);
+        if (!mounted) {
+          dispose = listen(textarea, "input", ctx[8]);
+          mounted = true;
+        }
+      },
+      p(ctx2, dirty) {
+        if (dirty & 2 && textarea_disabled_value !== (textarea_disabled_value = isCommitMessageDisabled(ctx2[1]))) {
+          textarea.disabled = textarea_disabled_value;
+        }
+        if (dirty & 4) {
+          set_input_value(textarea, ctx2[2]);
+        }
+      },
+      d(detaching) {
+        if (detaching)
+          detach(textarea);
+        mounted = false;
+        dispose();
+      }
+    };
+  }
   function create_fragment3(ctx) {
     let div0;
     let h4;
     let t1;
     let t2;
+    let t3;
     let div1;
     let button;
-    let t3;
+    let t4;
     let button_disabled_value;
     let mounted;
     let dispose;
@@ -1256,6 +1391,7 @@ label.svelte-vdjdgi.svelte-vdjdgi {
     for (let i = 0; i < each_value.length; i += 1) {
       each_blocks[i] = create_each_block2(get_each_context2(ctx, each_value, i));
     }
+    let if_block = useCommitMessage && create_if_block2(ctx);
     return {
       c() {
         div0 = element("div");
@@ -1266,14 +1402,17 @@ label.svelte-vdjdgi.svelte-vdjdgi {
           each_blocks[i].c();
         }
         t2 = space();
+        if (if_block)
+          if_block.c();
+        t3 = space();
         div1 = element("div");
         button = element("button");
-        t3 = text("save");
-        attr(h4, "class", "svelte-vdjdgi");
-        attr(div0, "class", "container svelte-vdjdgi");
+        t4 = text("save");
+        attr(h4, "class", "svelte-c3lwu6");
+        attr(div0, "class", "container svelte-c3lwu6");
         button.disabled = button_disabled_value = !ctx[1] || ctx[1] === "keep";
-        attr(button, "class", "svelte-vdjdgi");
-        attr(div1, "class", "buttons svelte-vdjdgi");
+        attr(button, "class", "svelte-c3lwu6");
+        attr(div1, "class", "centered svelte-c3lwu6");
       },
       m(target, anchor) {
         insert(target, div0, anchor);
@@ -1283,20 +1422,23 @@ label.svelte-vdjdgi.svelte-vdjdgi {
           each_blocks[i].m(div0, null);
         }
         insert(target, t2, anchor);
+        if (if_block)
+          if_block.m(target, anchor);
+        insert(target, t3, anchor);
         insert(target, div1, anchor);
         append(div1, button);
-        append(button, t3);
+        append(button, t4);
         if (!mounted) {
           dispose = listen(button, "click", function() {
-            if (is_function(saveAction(ctx[1], ctx[0])))
-              saveAction(ctx[1], ctx[0]).apply(this, arguments);
+            if (is_function(ctx[5](ctx[1], ctx[0])))
+              ctx[5](ctx[1], ctx[0]).apply(this, arguments);
           });
           mounted = true;
         }
       },
       p(new_ctx, [dirty]) {
         ctx = new_ctx;
-        if (dirty & 15) {
+        if (dirty & 27) {
           each_value = ctx[0];
           let i;
           for (i = 0; i < each_value.length; i += 1) {
@@ -1314,6 +1456,8 @@ label.svelte-vdjdgi.svelte-vdjdgi {
           }
           each_blocks.length = each_value.length;
         }
+        if (useCommitMessage)
+          if_block.p(ctx, dirty);
         if (dirty & 2 && button_disabled_value !== (button_disabled_value = !ctx[1] || ctx[1] === "keep")) {
           button.disabled = button_disabled_value;
         }
@@ -1326,6 +1470,10 @@ label.svelte-vdjdgi.svelte-vdjdgi {
         destroy_each(each_blocks, detaching);
         if (detaching)
           detach(t2);
+        if (if_block)
+          if_block.d(detaching);
+        if (detaching)
+          detach(t3);
         if (detaching)
           detach(div1);
         mounted = false;
@@ -1333,17 +1481,14 @@ label.svelte-vdjdgi.svelte-vdjdgi {
       }
     };
   }
-  function saveAction(selection, actions) {
-    const action = actions.find((a) => a.label === selection);
-    console.log(selection, actions, action);
-    parent.postMessage({
-      pluginMessage: { type: "updateVersion", action }
-    }, "*");
-    selection = "keep";
+  var useCommitMessage = false;
+  function isCommitMessageDisabled(selection) {
+    return selection === "keep";
   }
   function instance3($self, $props, $invalidate) {
     let { actions = [] } = $props;
     let selection = "keep";
+    let commitMessage = null;
     const labels = {
       keep: { label: "Keep", description: "" },
       initial: {
@@ -1385,10 +1530,26 @@ label.svelte-vdjdgi.svelte-vdjdgi {
         return action.version || "not versioned";
       }
     }
+    function saveAction(selection2, actions2) {
+      const action = actions2.find((a) => a.label === selection2);
+      console.log(selection2, actions2, action);
+      parent.postMessage({
+        pluginMessage: {
+          type: "updateVersion",
+          commitMessage: useCommitMessage ? commitMessage : void 0,
+          action
+        }
+      }, "*");
+      selection2 = "keep";
+    }
     const $binding_groups = [[]];
     function input_change_handler() {
       selection = this.__value;
       $invalidate(1, selection);
+    }
+    function textarea_input_handler() {
+      commitMessage = this.value;
+      $invalidate(2, commitMessage);
     }
     $self.$set = ($props2) => {
       if ("actions" in $props2)
@@ -1397,10 +1558,13 @@ label.svelte-vdjdgi.svelte-vdjdgi {
     return [
       actions,
       selection,
+      commitMessage,
       labels,
       currentVersionFor,
+      saveAction,
       input_change_handler,
-      $binding_groups
+      $binding_groups,
+      textarea_input_handler
     ];
   }
   var ActionList = class extends SvelteComponent {
@@ -1412,10 +1576,16 @@ label.svelte-vdjdgi.svelte-vdjdgi {
   var ActionList_default = ActionList;
 
   // lib/App.svelte
-  function create_if_block_22(ctx) {
+  function create_if_block_23(ctx) {
     let actionlist;
     let current;
-    actionlist = new ActionList_default({ props: { actions: ctx[1] } });
+    actionlist = new ActionList_default({
+      props: {
+        actions: ctx[1],
+        useCommitMessage: ctx[2].useCommitMessage,
+        commitMessage: ctx[3]
+      }
+    });
     return {
       c() {
         create_component(actionlist.$.fragment);
@@ -1428,6 +1598,10 @@ label.svelte-vdjdgi.svelte-vdjdgi {
         const actionlist_changes = {};
         if (dirty & 2)
           actionlist_changes.actions = ctx2[1];
+        if (dirty & 4)
+          actionlist_changes.useCommitMessage = ctx2[2].useCommitMessage;
+        if (dirty & 8)
+          actionlist_changes.commitMessage = ctx2[3];
         actionlist.$set(actionlist_changes);
       },
       i(local) {
@@ -1484,6 +1658,7 @@ label.svelte-vdjdgi.svelte-vdjdgi {
     settings_1 = new Settings_default({
       props: {
         useRfc: ctx[2].useRfc,
+        useCommitMessage: ctx[2].useCommitMessage,
         updateName: ctx[2].updateName
       }
     });
@@ -1499,6 +1674,8 @@ label.svelte-vdjdgi.svelte-vdjdgi {
         const settings_1_changes = {};
         if (dirty & 4)
           settings_1_changes.useRfc = ctx2[2].useRfc;
+        if (dirty & 4)
+          settings_1_changes.useCommitMessage = ctx2[2].useCommitMessage;
         if (dirty & 4)
           settings_1_changes.updateName = ctx2[2].updateName;
         settings_1.$set(settings_1_changes);
@@ -1524,7 +1701,7 @@ label.svelte-vdjdgi.svelte-vdjdgi {
     let if_block0;
     let t;
     let current;
-    const if_block_creators = [create_if_block_13, create_if_block_22];
+    const if_block_creators = [create_if_block_13, create_if_block_23];
     const if_blocks = [];
     function select_block_type(ctx2, dirty) {
       if (ctx2[0] === "list")
@@ -1545,7 +1722,7 @@ label.svelte-vdjdgi.svelte-vdjdgi {
         t = space();
         if (if_block1)
           if_block1.c();
-        attr(div, "class", "body svelte-lg7e9c");
+        attr(div, "class", "body svelte-1uwbz41");
       },
       m(target, anchor) {
         insert(target, div, anchor);
@@ -1633,6 +1810,7 @@ label.svelte-vdjdgi.svelte-vdjdgi {
     let type = "loading";
     let data = null;
     let settings = null;
+    let commitMessage = null;
     onMount(() => {
       parent.postMessage({ pluginMessage: { type: "settings" } }, "*");
     });
@@ -1645,10 +1823,11 @@ label.svelte-vdjdgi.svelte-vdjdgi {
         default:
           $invalidate(0, type = message.type);
           $invalidate(1, data = message.data);
+          $invalidate(3, commitMessage = message.commitMessage);
           break;
       }
     };
-    return [type, data, settings];
+    return [type, data, settings, commitMessage];
   }
   var App = class extends SvelteComponent {
     constructor(options) {
@@ -1683,7 +1862,7 @@ function deriveActions(node, version, useRfc, updateName) {
     label: "keep"
   }];
   if (version) {
-    const options = version.deriveOptions(useRfc === true).map((versionObject) => {
+    const options = version.deriveOptions(useRfc).map((versionObject) => {
       const newVersion = new Version(versionObject);
       const label = version.elevatedLevel(newVersion) || "keep";
       const action = new Action(node, newVersion, label);
@@ -1691,12 +1870,12 @@ function deriveActions(node, version, useRfc, updateName) {
     });
     actions.push(...options);
   } else {
-    const initialVersion = new Version(void 0, useRfc === true);
+    const initialVersion = new Version(void 0, useRfc);
     const action = new Action(node, initialVersion, "initial");
     actions.push(action.toObject());
   }
   const hasOneVersionUndefined = !versionFromName !== !version;
-  const hasDifferentVersion = !!versionFromName && !!version && !version.equals(versionFromName);
+  const hasDifferentVersion = Boolean(versionFromName) && Boolean(version) && !version.equals(versionFromName);
   if (updateName && (hasOneVersionUndefined || hasDifferentVersion)) {
     actions.push({
       nodeId: node.id,
@@ -1729,11 +1908,19 @@ function updateVersionInName(node, version) {
     node.name = hasVersionInName ? name.replace(versionRegex, newVersionString) : `${name}${newVersionString}`;
   }
 }
+var selectionChange = () => {
+  updateUi(true);
+};
+figma.on("selectionchange", selectionChange);
+figma.on("close", () => {
+  figma.off("selectionchange", selectionChange);
+});
 figma.ui.onmessage = (message) => {
   switch (message.type) {
-    case "settings":
+    case "settings": {
       const settings = __spreadValues({
         useRfc: false,
+        useCommitMessage: false,
         updateName: false
       }, Plugin.getConfig("settings"));
       figma.ui.postMessage({
@@ -1741,13 +1928,15 @@ figma.ui.onmessage = (message) => {
         settings
       });
       break;
-    case "updateSettings":
+    }
+    case "updateSettings": {
       const oldSettings = Plugin.getConfig("settings") || {};
       const newSettings = __spreadValues(__spreadValues({}, oldSettings), message.settings);
       Plugin.setConfig("settings", newSettings);
       updateUi();
       break;
-    case "updateVersion":
+    }
+    case "updateVersion": {
       const action = message.action;
       const node = figma.getNodeById(action.nodeId);
       const { updateName } = Plugin.getConfig("settings") || {};
@@ -1758,10 +1947,13 @@ figma.ui.onmessage = (message) => {
       }
       updateUi();
       break;
-    default:
+    }
+    default: {
+      break;
+    }
   }
 };
-function updateUi() {
+function updateUi(hasSelectionChanged = false) {
   const page = figma.currentPage;
   const selection = page.selection;
   if (selection.length > 0) {
@@ -1772,7 +1964,7 @@ function updateUi() {
       const node = selection[0];
       const version = Plugin.getVersion(node);
       const actions = deriveActions(node, version, useRfc, updateName);
-      uiOptions["title"] = node.name;
+      uiOptions.title = node.name;
       message = {
         type: "actions",
         data: actions
@@ -1795,7 +1987,8 @@ function updateUi() {
     figma.showUI(ui_default, uiOptions);
     figma.ui.postMessage(message);
   } else {
-    figma.closePlugin("Semantic Versioning requires selected Nodes.");
+    const closeMessage = hasSelectionChanged ? void 0 : "Semantic Versioning requires selected Nodes.";
+    figma.closePlugin(closeMessage);
   }
 }
 if (figma.editorType === "figma") {
