@@ -36,55 +36,61 @@ table.svelte-15gjnjl > tr.svelte-15gjnjl > th.svelte-15gjnjl {
 }
 
 /* fakecss:/home/florian-neumann/github/figma-semantic-versioning/lib/ActionList.esbuild-svelte-fake-css */
-.container.svelte-c3lwu6.svelte-c3lwu6 {
+.container.svelte-qhon93.svelte-qhon93 {
   padding: 2px;
 }
-.container.svelte-c3lwu6 h4.svelte-c3lwu6 {
+.container.svelte-qhon93 h4.svelte-qhon93 {
   font-size: 10px;
   color: #777;
   margin-top: 0;
   margin-bottom: 1ex;
 }
-input.svelte-c3lwu6.svelte-c3lwu6 {
+input.svelte-qhon93.svelte-qhon93 {
   vertical-align: super;
 }
-label.svelte-c3lwu6.svelte-c3lwu6 {
+label.svelte-qhon93.svelte-qhon93 {
   display: inline-block;
   margin-left: 0.6em;
 }
-.list-element.svelte-c3lwu6.svelte-c3lwu6 {
+.list-element.svelte-qhon93.svelte-qhon93 {
   padding: 1ex 0.4ex 0.8ex 0.4ex;
   margin-bottom: 0.8ex;
 }
-.list-element.svelte-c3lwu6.svelte-c3lwu6:hover {
+.list-element.svelte-qhon93.svelte-qhon93:hover {
   background-color: #daebf7;
 }
-.header.svelte-c3lwu6.svelte-c3lwu6 {
+.header.svelte-qhon93.svelte-qhon93 {
   font-size: 10px;
   font-weight: 600;
   color: #444;
 }
-.description.svelte-c3lwu6.svelte-c3lwu6 {
+.description.svelte-qhon93.svelte-qhon93 {
   font-weight: 400;
   color: #555;
 }
-.body.svelte-c3lwu6.svelte-c3lwu6 {
+.body.svelte-qhon93.svelte-qhon93 {
   margin-top: 1px;
   font-size: 14px;
 }
-.centered.svelte-c3lwu6.svelte-c3lwu6 {
+.centered.svelte-qhon93.svelte-qhon93 {
   display: flex;
   justify-content: center;
   margin: 0 1ex 0 1ex;
   padding: 0.2ex;
 }
-.centered.svelte-c3lwu6 button.svelte-c3lwu6 {
+.centered.svelte-qhon93 button.svelte-qhon93 {
   font-size: 14px;
   display: inline-block;
   padding: 0.35em 1.2em;
   margin: 0 0.3em 0.3em 0;
   text-align: center;
   transition: all 0.5s;
+}
+.centered.svelte-qhon93 textarea.svelte-qhon93 {
+  width: 100%;
+  height: auto;
+  padding: 0.35em 0.6em;
+  margin: 0 0.66em 0.66em 0;
 }
 
 /* fakecss:/home/florian-neumann/github/figma-semantic-versioning/lib/App.esbuild-svelte-fake-css */

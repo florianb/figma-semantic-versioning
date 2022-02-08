@@ -1,9 +1,13 @@
 <script>
+	import { debounce } from "lodash";
+
 	export let actions = [];
+
 	let selection = "keep";
 	let commitMessage = null;
-	let useCommitMessage = false;
+	let settings = null;
 
+	const commitMessageMaxLength = 144;
 	const labels = {
 		keep: {
 			label: "Keep",
@@ -59,6 +63,10 @@
 		return selection === "keep";
 	}
 
+	function useCommitMessage() {
+		return settings && settings.useCommitMessage;
+	}
+
 	function saveAction(selection, actions) {
 		const action = actions.find((a) => a.label === selection);
 
@@ -77,6 +85,21 @@
 
 		selection = "keep";
 	}
+
+	const updateCommitMessage = debounce((e) => {
+		parent.postMessage(
+			{
+				pluginMessage: {
+					type: "updateCommitMessage",
+					commitMessage,
+				},
+			},
+			"*"
+		);
+	}, 300);
+
+	$: (commitMessageRemainingCharacters) =>
+		commitMessageMaxLength - (commitMessage ? commitMessage.length : 0);
 </script>
 
 <div class="container">
@@ -114,10 +137,18 @@
 </div>
 
 {#if useCommitMessage}
-	<textarea
-		bind:value={commitMessage}
-		disabled={isCommitMessageDisabled(selection)}
-	/>
+	<div class="centered">
+		<label for="commit-message">{commitMessageRemainingCharacters}</label>
+		<textarea
+			id="commit-message"
+			bind:value={commitMessage}
+			disabled={isCommitMessageDisabled(selection)}
+			on:input={updateCommitMessage()}
+			rows="3"
+			maxlength="144"
+			placeholder="What is changing with your release?"
+		/>
+	</div>
 {/if}
 
 <div class="centered">
@@ -190,5 +221,12 @@
 		margin: 0 0.3em 0.3em 0;
 		text-align: center;
 		transition: all 0.5s;
+	}
+
+	.centered textarea {
+		width: 100%;
+		height: auto;
+		padding: 0.35em 0.6em;
+		margin: 0 0.66em 0.66em 0;
 	}
 </style>

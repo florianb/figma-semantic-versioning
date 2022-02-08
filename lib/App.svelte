@@ -35,11 +35,7 @@
 	{#if type === "list"}
 		<NodeList nodes={data} />
 	{:else if type === "actions"}
-		<ActionList
-			actions={data}
-			useCommitMessage={settings.useCommitMessage}
-			{commitMessage}
-		/>
+		<ActionList actions={data} {commitMessage} {settings} />
 	{/if}
 
 	{#if settings !== null}

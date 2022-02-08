@@ -155,6 +155,7 @@ function updateUi(hasSelectionChanged = false) {
 			const {useRfc, updateName} = (Plugin.getConfig('settings') || {}) as SettingsObject;
 			const node = selection[0] as BaseNode;
 			const version = Plugin.getVersion(node);
+			const history = Plugin.getHistory(node);
 
 			const actions = deriveActions(node, version, useRfc, updateName);
 
@@ -162,6 +163,7 @@ function updateUi(hasSelectionChanged = false) {
 			message = {
 				type: 'actions',
 				data: actions,
+				history,
 			};
 		} else {
 			const selectedNodes = selection.map(node => {

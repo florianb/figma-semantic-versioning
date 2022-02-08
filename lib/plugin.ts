@@ -2,6 +2,11 @@
 
 import Version from './version.js';
 
+interface HistoryObject {
+	version?: Version;
+	commitMessage?: string;
+}
+
 export default abstract class Plugin {
 	public static namespace = 'com.github.florianb.figma_semantic_versioning';
 
@@ -41,6 +46,26 @@ export default abstract class Plugin {
 		const newVersion = version instanceof Version ? (new Version(version)).toString() : version;
 
 		Plugin.setNode(node, 'version', newVersion);
+	}
+
+	// Get History
+	public static getHistory(node: BaseNode): HistoryObject[] | undefined {
+		const history = Plugin.getNode(node, 'history') as any[];
+
+		if (history) {
+			return history
+				.map(h => ({
+					version: h.version ? new Version(h.version) : undefined,
+					commitMessage: h.commitMessage ? h.commitMessage as string : undefined,
+				}));
+		}
+
+		return undefined;
+	}
+
+	// Set History
+	public static setHistory(node: BaseNode, history?: HistoryObject[]) {
+		Plugin.setNode(node, 'history', history);
 	}
 
 	private static packValue(value: any): string {
