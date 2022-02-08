@@ -13,7 +13,7 @@ interface SettingsObject {
 
 const versionRegex = /@(\d+\.\d+\.\d+(-rfc\.\d+)?)$/im;
 
-function deriveActions(node: BaseNode, version?: Version, useRfc?: boolean, updateName?: boolean): ActionObject[] {
+function deriveActions(node: BaseNode, version?: Version, useRfc?: boolean, updateName?: boolean, useCommitMessage?: boolean): ActionObject[] {
 	const versionFromName = getVersionFromName(node);
 	const actions: ActionObject[] = [{
 		version: version ? version.toString() : null,
@@ -53,6 +53,20 @@ function deriveActions(node: BaseNode, version?: Version, useRfc?: boolean, upda
 			version: version ? version.toString() : undefined,
 			nameVersion: versionFromName ? versionFromName.toString() : undefined,
 		});
+	}
+
+	if (useCommitMessage) {
+		const history = Plugin.getHistory(node) || [];
+		const lastCommit = history.find(h => h.version);
+
+		if (lastCommit && lastCommit.commitMessage.length > 0) {
+			actions.push({
+				nodeId: node.id,
+				version: lastCommit.version.toString(),
+				commitMessage: lastCommit.commitMessage,
+				label: 'revert',
+			});
+		}
 	}
 
 	return actions;
@@ -95,6 +109,8 @@ figma.on('close', () => {
 
 // eslint-disable-next-line unicorn/prefer-add-event-listener
 figma.ui.onmessage = message => {
+	console.log(message);
+
 	switch (message.type) {
 		case 'settings': {
 			const settings: SettingsObject = {
@@ -108,7 +124,6 @@ figma.ui.onmessage = message => {
 				type: 'settings',
 				settings,
 			});
-
 			break;
 		}
 
@@ -125,7 +140,7 @@ figma.ui.onmessage = message => {
 		case 'updateVersion': {
 			const action = message.action as ActionObject;
 			const node = figma.getNodeById(action.nodeId);
-			const {updateName} = (Plugin.getConfig('settings') || {}) as SettingsObject;
+			const {updateName, useCommitMessage} = (Plugin.getConfig('settings') || {}) as SettingsObject;
 			const version = action.version ? new Version(action.version) : '';
 
 			Plugin.setVersion(node, version);
@@ -133,7 +148,41 @@ figma.ui.onmessage = message => {
 				updateVersionInName(node, version);
 			}
 
+			if (useCommitMessage && version !== '') {
+				const commitMessage = message.commitMessage as string;
+				const history = Plugin.getHistory(node) || [];
+
+				if (history.length > 0 && !history[0].version) {
+					history[0].version = version;
+					history[0].commitMessage = commitMessage;
+				} else {
+					history.unshift({
+						version,
+						commitMessage,
+					});
+				}
+
+				Plugin.setHistory(node, history);
+			}
+
 			updateUi();
+			break;
+		}
+
+		case 'updateCommitMessage': {
+			const node = figma.getNodeById(message.nodeId as string);
+			const commitMessage = message.commitMessage as string;
+			const history = Plugin.getHistory(node) || [];
+
+			if (history.length > 0 && !history[0].version) {
+				history[0].commitMessage = commitMessage;
+			} else {
+				history.unshift({
+					commitMessage,
+				});
+			}
+
+			Plugin.setHistory(node, history);
 			break;
 		}
 
@@ -152,12 +201,12 @@ function updateUi(hasSelectionChanged = false) {
 		const uiOptions: ShowUIOptions = {};
 
 		if (selection.length === 1) {
-			const {useRfc, updateName} = (Plugin.getConfig('settings') || {}) as SettingsObject;
+			const {useRfc, updateName, useCommitMessage} = (Plugin.getConfig('settings') || {}) as SettingsObject;
 			const node = selection[0] as BaseNode;
 			const version = Plugin.getVersion(node);
 			const history = Plugin.getHistory(node);
 
-			const actions = deriveActions(node, version, useRfc, updateName);
+			const actions = deriveActions(node, version, useRfc, updateName, useCommitMessage);
 
 			uiOptions.title = node.name;
 			message = {

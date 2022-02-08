@@ -36,49 +36,49 @@ table.svelte-15gjnjl > tr.svelte-15gjnjl > th.svelte-15gjnjl {
 }
 
 /* fakecss:/home/florian-neumann/github/figma-semantic-versioning/lib/ActionList.esbuild-svelte-fake-css */
-.container.svelte-qhon93.svelte-qhon93 {
+.container.svelte-17kdrls.svelte-17kdrls {
   padding: 2px;
 }
-.container.svelte-qhon93 h4.svelte-qhon93 {
+.container.svelte-17kdrls h4.svelte-17kdrls {
   font-size: 10px;
   color: #777;
   margin-top: 0;
   margin-bottom: 1ex;
 }
-input.svelte-qhon93.svelte-qhon93 {
+input.svelte-17kdrls.svelte-17kdrls {
   vertical-align: super;
 }
-label.svelte-qhon93.svelte-qhon93 {
+label.svelte-17kdrls.svelte-17kdrls {
   display: inline-block;
   margin-left: 0.6em;
 }
-.list-element.svelte-qhon93.svelte-qhon93 {
+.list-element.svelte-17kdrls.svelte-17kdrls {
   padding: 1ex 0.4ex 0.8ex 0.4ex;
   margin-bottom: 0.8ex;
 }
-.list-element.svelte-qhon93.svelte-qhon93:hover {
+.list-element.svelte-17kdrls.svelte-17kdrls:hover {
   background-color: #daebf7;
 }
-.header.svelte-qhon93.svelte-qhon93 {
+.header.svelte-17kdrls.svelte-17kdrls {
   font-size: 10px;
   font-weight: 600;
   color: #444;
 }
-.description.svelte-qhon93.svelte-qhon93 {
+.description.svelte-17kdrls.svelte-17kdrls {
   font-weight: 400;
   color: #555;
 }
-.body.svelte-qhon93.svelte-qhon93 {
+.body.svelte-17kdrls.svelte-17kdrls {
   margin-top: 1px;
   font-size: 14px;
 }
-.centered.svelte-qhon93.svelte-qhon93 {
+.centered.svelte-17kdrls.svelte-17kdrls {
   display: flex;
   justify-content: center;
   margin: 0 1ex 0 1ex;
   padding: 0.2ex;
 }
-.centered.svelte-qhon93 button.svelte-qhon93 {
+.centered.svelte-17kdrls button.svelte-17kdrls {
   font-size: 14px;
   display: inline-block;
   padding: 0.35em 1.2em;
@@ -86,11 +86,27 @@ label.svelte-qhon93.svelte-qhon93 {
   text-align: center;
   transition: all 0.5s;
 }
-.centered.svelte-qhon93 textarea.svelte-qhon93 {
+.textarea-label.svelte-17kdrls.svelte-17kdrls {
+  display: inline-block;
+  text-align: right;
+  box-sizing: border-box;
   width: 100%;
+  margin: 0;
+  padding-right: 1.1em;
+  font-size: 10px;
+  color: #888;
+}
+.centered.svelte-17kdrls textarea.svelte-17kdrls {
+  width: 100%;
+  display: inline-block;
   height: auto;
   padding: 0.35em 0.6em;
-  margin: 0 0.66em 0.66em 0;
+  margin: 0 0 0.66em 0;
+  font-family: Inter, sans-serif;
+  font-feature-settings: "liga", "calt";
+  font-size: 12px;
+  font-weight: 400;
+  font-stretch: 100%;
 }
 
 /* fakecss:/home/florian-neumann/github/figma-semantic-versioning/lib/App.esbuild-svelte-fake-css */

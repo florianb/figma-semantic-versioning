@@ -6,6 +6,7 @@
 
 	let type = "loading";
 	let data = null;
+	let history = null;
 	let settings = null;
 	let commitMessage = null;
 
@@ -16,8 +17,6 @@
 	window.onmessage = (event) => {
 		const message = event.data.pluginMessage;
 
-		// console.log('ui received', message);
-
 		switch (message.type) {
 			case "settings":
 				settings = message.settings;
@@ -25,7 +24,15 @@
 			default:
 				type = message.type;
 				data = message.data;
-				commitMessage = message.commitMessage;
+				history = message.history;
+
+				if (
+					history.length > 0 &&
+					!history[0].version &&
+					history[0].commitMessage
+				) {
+					commitMessage = history[0].commitMessage;
+				}
 				break;
 		}
 	};

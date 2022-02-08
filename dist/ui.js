@@ -6202,20 +6202,20 @@
   var import_lodash = __toESM(require_lodash());
   function get_each_context2(ctx, list, i) {
     const child_ctx = ctx.slice();
-    child_ctx[10] = list[i];
+    child_ctx[11] = list[i];
     return child_ctx;
   }
   function create_if_block_4(ctx) {
     let span;
     let t0;
-    let t1_value = ctx[3][ctx[10].label].description + "";
+    let t1_value = ctx[4][ctx[11].label].description + "";
     let t1;
     return {
       c() {
         span = element("span");
         t0 = text("\xB7\xA0");
         t1 = text(t1_value);
-        attr(span, "class", "description svelte-qhon93");
+        attr(span, "class", "description svelte-17kdrls");
       },
       m(target, anchor) {
         insert(target, span, anchor);
@@ -6223,7 +6223,7 @@
         append(span, t1);
       },
       p(ctx2, dirty) {
-        if (dirty & 1 && t1_value !== (t1_value = ctx2[3][ctx2[10].label].description + ""))
+        if (dirty & 1 && t1_value !== (t1_value = ctx2[4][ctx2[11].label].description + ""))
           set_data(t1, t1_value);
       },
       d(detaching) {
@@ -6233,10 +6233,10 @@
     };
   }
   function create_if_block_22(ctx) {
-    let t0_value = ctx[4](ctx[10].label) + "";
+    let t0_value = ctx[5](ctx[11].label) + "";
     let t0;
     let t1;
-    let if_block = ctx[10].label === "toName" && create_if_block_3(ctx);
+    let if_block = ctx[11].label === "toName" && create_if_block_3(ctx);
     return {
       c() {
         if (if_block)
@@ -6251,7 +6251,7 @@
         insert(target, t1, anchor);
       },
       p(ctx2, dirty) {
-        if (ctx2[10].label === "toName") {
+        if (ctx2[11].label === "toName") {
           if (if_block) {
           } else {
             if_block = create_if_block_3(ctx2);
@@ -6262,7 +6262,7 @@
           if_block.d(1);
           if_block = null;
         }
-        if (dirty & 1 && t0_value !== (t0_value = ctx2[4](ctx2[10].label) + ""))
+        if (dirty & 1 && t0_value !== (t0_value = ctx2[5](ctx2[11].label) + ""))
           set_data(t0, t0_value);
       },
       d(detaching) {
@@ -6313,21 +6313,21 @@
     let t0;
     let label;
     let div0;
-    let t1_value = ctx[3][ctx[10].label].label + "";
+    let t1_value = ctx[4][ctx[11].label].label + "";
     let t1;
     let t2;
     let t3;
     let div1;
     let t4;
-    let t5_value = (ctx[10].version || "not versioned") + "";
+    let t5_value = (ctx[11].version || "not versioned") + "";
     let t5;
     let label_for_value;
     let t6;
     let mounted;
     let dispose;
-    let if_block0 = ctx[3][ctx[10].label].description && create_if_block_4(ctx);
-    let if_block1 = ctx[10].label !== "keep" && create_if_block_22(ctx);
-    let if_block2 = ctx[10].label === "toName" && ctx[10].version && create_if_block_12(ctx);
+    let if_block0 = ctx[4][ctx[11].label].description && create_if_block_4(ctx);
+    let if_block1 = ctx[11].label !== "keep" && create_if_block_22(ctx);
+    let if_block2 = ctx[11].label === "toName" && ctx[11].version && create_if_block_12(ctx);
     return {
       c() {
         div2 = element("div");
@@ -6350,16 +6350,16 @@
         t6 = space();
         attr(input, "type", "radio");
         attr(input, "name", "action");
-        attr(input, "id", input_id_value = ctx[10].label);
-        input.__value = input_value_value = ctx[10].label;
+        attr(input, "id", input_id_value = ctx[11].label);
+        input.__value = input_value_value = ctx[11].label;
         input.value = input.__value;
-        attr(input, "class", "svelte-qhon93");
-        ctx[8][0].push(input);
-        attr(div0, "class", "header svelte-qhon93");
-        attr(div1, "class", "body svelte-qhon93");
-        attr(label, "for", label_for_value = ctx[10].label);
-        attr(label, "class", "svelte-qhon93");
-        attr(div2, "class", "list-element svelte-qhon93");
+        attr(input, "class", "svelte-17kdrls");
+        ctx[9][0].push(input);
+        attr(div0, "class", "header svelte-17kdrls");
+        attr(div1, "class", "body svelte-17kdrls");
+        attr(label, "for", label_for_value = ctx[11].label);
+        attr(label, "class", "svelte-17kdrls");
+        attr(div2, "class", "list-element svelte-17kdrls");
       },
       m(target, anchor) {
         insert(target, div2, anchor);
@@ -6382,24 +6382,24 @@
         append(div1, t5);
         append(div2, t6);
         if (!mounted) {
-          dispose = listen(input, "change", ctx[7]);
+          dispose = listen(input, "change", ctx[8]);
           mounted = true;
         }
       },
       p(ctx2, dirty) {
-        if (dirty & 1 && input_id_value !== (input_id_value = ctx2[10].label)) {
+        if (dirty & 1 && input_id_value !== (input_id_value = ctx2[11].label)) {
           attr(input, "id", input_id_value);
         }
-        if (dirty & 1 && input_value_value !== (input_value_value = ctx2[10].label)) {
+        if (dirty & 1 && input_value_value !== (input_value_value = ctx2[11].label)) {
           input.__value = input_value_value;
           input.value = input.__value;
         }
         if (dirty & 4) {
           input.checked = input.__value === ctx2[2];
         }
-        if (dirty & 1 && t1_value !== (t1_value = ctx2[3][ctx2[10].label].label + ""))
+        if (dirty & 1 && t1_value !== (t1_value = ctx2[4][ctx2[11].label].label + ""))
           set_data(t1, t1_value);
-        if (ctx2[3][ctx2[10].label].description) {
+        if (ctx2[4][ctx2[11].label].description) {
           if (if_block0) {
             if_block0.p(ctx2, dirty);
           } else {
@@ -6411,7 +6411,7 @@
           if_block0.d(1);
           if_block0 = null;
         }
-        if (ctx2[10].label !== "keep") {
+        if (ctx2[11].label !== "keep") {
           if (if_block1) {
             if_block1.p(ctx2, dirty);
           } else {
@@ -6423,7 +6423,7 @@
           if_block1.d(1);
           if_block1 = null;
         }
-        if (ctx2[10].label === "toName" && ctx2[10].version) {
+        if (ctx2[11].label === "toName" && ctx2[11].version) {
           if (if_block2) {
           } else {
             if_block2 = create_if_block_12(ctx2);
@@ -6434,16 +6434,16 @@
           if_block2.d(1);
           if_block2 = null;
         }
-        if (dirty & 1 && t5_value !== (t5_value = (ctx2[10].version || "not versioned") + ""))
+        if (dirty & 1 && t5_value !== (t5_value = (ctx2[11].version || "not versioned") + ""))
           set_data(t5, t5_value);
-        if (dirty & 1 && label_for_value !== (label_for_value = ctx2[10].label)) {
+        if (dirty & 1 && label_for_value !== (label_for_value = ctx2[11].label)) {
           attr(label, "for", label_for_value);
         }
       },
       d(detaching) {
         if (detaching)
           detach(div2);
-        ctx[8][0].splice(ctx[8][0].indexOf(input), 1);
+        ctx[9][0].splice(ctx[9][0].indexOf(input), 1);
         if (if_block0)
           if_block0.d();
         if (if_block1)
@@ -6456,45 +6456,49 @@
     };
   }
   function create_if_block2(ctx) {
-    let div;
     let label;
+    let t0;
     let t1;
+    let div;
     let textarea;
     let textarea_disabled_value;
     let mounted;
     let dispose;
     return {
       c() {
-        div = element("div");
         label = element("label");
-        label.textContent = `${commitMessageRemainingCharacters}`;
+        t0 = text(ctx[3]);
         t1 = space();
+        div = element("div");
         textarea = element("textarea");
+        attr(label, "class", "textarea-label svelte-17kdrls");
         attr(label, "for", "commit-message");
-        attr(label, "class", "svelte-qhon93");
         attr(textarea, "id", "commit-message");
         textarea.disabled = textarea_disabled_value = isCommitMessageDisabled(ctx[2]);
         attr(textarea, "rows", "3");
         attr(textarea, "maxlength", "144");
         attr(textarea, "placeholder", "What is changing with your release?");
-        attr(textarea, "class", "svelte-qhon93");
-        attr(div, "class", "centered svelte-qhon93");
+        attr(textarea, "class", "svelte-17kdrls");
+        attr(div, "class", "centered svelte-17kdrls");
       },
       m(target, anchor) {
+        insert(target, label, anchor);
+        append(label, t0);
+        insert(target, t1, anchor);
         insert(target, div, anchor);
-        append(div, label);
-        append(div, t1);
         append(div, textarea);
         set_input_value(textarea, ctx[1]);
         if (!mounted) {
           dispose = [
-            listen(textarea, "input", ctx[9]),
-            listen(textarea, "input", ctx[6]())
+            listen(textarea, "input", ctx[10]),
+            listen(textarea, "input", ctx[7])
           ];
           mounted = true;
         }
       },
       p(ctx2, dirty) {
+        if (dirty & 8)
+          set_data(t0, ctx2[3]);
         if (dirty & 4 && textarea_disabled_value !== (textarea_disabled_value = isCommitMessageDisabled(ctx2[2]))) {
           textarea.disabled = textarea_disabled_value;
         }
@@ -6503,6 +6507,10 @@
         }
       },
       d(detaching) {
+        if (detaching)
+          detach(label);
+        if (detaching)
+          detach(t1);
         if (detaching)
           detach(div);
         mounted = false;
@@ -6544,11 +6552,11 @@
         div1 = element("div");
         button = element("button");
         t4 = text("save");
-        attr(h4, "class", "svelte-qhon93");
-        attr(div0, "class", "container svelte-qhon93");
+        attr(h4, "class", "svelte-17kdrls");
+        attr(div0, "class", "container svelte-17kdrls");
         button.disabled = button_disabled_value = !ctx[2] || ctx[2] === "keep";
-        attr(button, "class", "svelte-qhon93");
-        attr(div1, "class", "centered svelte-qhon93");
+        attr(button, "class", "svelte-17kdrls");
+        attr(div1, "class", "centered svelte-17kdrls");
       },
       m(target, anchor) {
         insert(target, div0, anchor);
@@ -6566,15 +6574,15 @@
         append(button, t4);
         if (!mounted) {
           dispose = listen(button, "click", function() {
-            if (is_function(ctx[5](ctx[2], ctx[0])))
-              ctx[5](ctx[2], ctx[0]).apply(this, arguments);
+            if (is_function(ctx[6](ctx[2], ctx[0])))
+              ctx[6](ctx[2], ctx[0]).apply(this, arguments);
           });
           mounted = true;
         }
       },
       p(new_ctx, [dirty]) {
         ctx = new_ctx;
-        if (dirty & 29) {
+        if (dirty & 53) {
           each_value = ctx[0];
           let i;
           for (i = 0; i < each_value.length; i += 1) {
@@ -6626,6 +6634,7 @@
     return settings && settings.useCommitMessage;
   }
   function instance3($$self, $$props, $$invalidate) {
+    let commitMessageRemainingCharacters;
     let { actions = [] } = $$props;
     let selection = "keep";
     let commitMessage = null;
@@ -6672,7 +6681,6 @@
     }
     function saveAction(selection2, actions2) {
       const action = actions2.find((a) => a.label === selection2);
-      console.log(selection2, actions2, action);
       parent.postMessage({
         pluginMessage: {
           type: "updateVersion",
@@ -6683,13 +6691,16 @@
       selection2 = "keep";
     }
     const updateCommitMessage = (0, import_lodash.debounce)((e) => {
+      const action = actions.find((a) => a.nodeId);
+      const nodeId = action.nodeId;
       parent.postMessage({
         pluginMessage: {
           type: "updateCommitMessage",
-          commitMessage
+          commitMessage: e.target.value,
+          nodeId
         }
       }, "*");
-    }, 300);
+    }, 266);
     const $$binding_groups = [[]];
     function input_change_handler() {
       selection = this.__value;
@@ -6706,13 +6717,14 @@
     $$self.$$.update = () => {
       if ($$self.$$.dirty & 2) {
         $:
-          (commitMessageRemainingCharacters2) => commitMessageMaxLength - (commitMessage ? commitMessage.length : 0);
+          $$invalidate(3, commitMessageRemainingCharacters = commitMessageMaxLength - (commitMessage !== null ? commitMessage.length : 0));
       }
     };
     return [
       actions,
       commitMessage,
       selection,
+      commitMessageRemainingCharacters,
       labels,
       currentVersionFor,
       saveAction,
@@ -6964,6 +6976,7 @@
   function instance4($$self, $$props, $$invalidate) {
     let type = "loading";
     let data = null;
+    let history = null;
     let settings2 = null;
     let commitMessage = null;
     onMount(() => {
@@ -6978,7 +6991,10 @@
         default:
           $$invalidate(0, type = message.type);
           $$invalidate(1, data = message.data);
-          $$invalidate(3, commitMessage = message.commitMessage);
+          history = message.history;
+          if (history.length > 0 && !history[0].version && history[0].commitMessage) {
+            $$invalidate(3, commitMessage = history[0].commitMessage);
+          }
           break;
       }
     };

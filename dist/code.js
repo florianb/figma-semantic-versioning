@@ -266,49 +266,49 @@ table.svelte-15gjnjl > tr.svelte-15gjnjl > th.svelte-15gjnjl {
 }
 
 /* fakecss:/home/florian-neumann/github/figma-semantic-versioning/lib/ActionList.esbuild-svelte-fake-css */
-.container.svelte-qhon93.svelte-qhon93 {
+.container.svelte-17kdrls.svelte-17kdrls {
   padding: 2px;
 }
-.container.svelte-qhon93 h4.svelte-qhon93 {
+.container.svelte-17kdrls h4.svelte-17kdrls {
   font-size: 10px;
   color: #777;
   margin-top: 0;
   margin-bottom: 1ex;
 }
-input.svelte-qhon93.svelte-qhon93 {
+input.svelte-17kdrls.svelte-17kdrls {
   vertical-align: super;
 }
-label.svelte-qhon93.svelte-qhon93 {
+label.svelte-17kdrls.svelte-17kdrls {
   display: inline-block;
   margin-left: 0.6em;
 }
-.list-element.svelte-qhon93.svelte-qhon93 {
+.list-element.svelte-17kdrls.svelte-17kdrls {
   padding: 1ex 0.4ex 0.8ex 0.4ex;
   margin-bottom: 0.8ex;
 }
-.list-element.svelte-qhon93.svelte-qhon93:hover {
+.list-element.svelte-17kdrls.svelte-17kdrls:hover {
   background-color: #daebf7;
 }
-.header.svelte-qhon93.svelte-qhon93 {
+.header.svelte-17kdrls.svelte-17kdrls {
   font-size: 10px;
   font-weight: 600;
   color: #444;
 }
-.description.svelte-qhon93.svelte-qhon93 {
+.description.svelte-17kdrls.svelte-17kdrls {
   font-weight: 400;
   color: #555;
 }
-.body.svelte-qhon93.svelte-qhon93 {
+.body.svelte-17kdrls.svelte-17kdrls {
   margin-top: 1px;
   font-size: 14px;
 }
-.centered.svelte-qhon93.svelte-qhon93 {
+.centered.svelte-17kdrls.svelte-17kdrls {
   display: flex;
   justify-content: center;
   margin: 0 1ex 0 1ex;
   padding: 0.2ex;
 }
-.centered.svelte-qhon93 button.svelte-qhon93 {
+.centered.svelte-17kdrls button.svelte-17kdrls {
   font-size: 14px;
   display: inline-block;
   padding: 0.35em 1.2em;
@@ -316,11 +316,27 @@ label.svelte-qhon93.svelte-qhon93 {
   text-align: center;
   transition: all 0.5s;
 }
-.centered.svelte-qhon93 textarea.svelte-qhon93 {
+.textarea-label.svelte-17kdrls.svelte-17kdrls {
+  display: inline-block;
+  text-align: right;
+  box-sizing: border-box;
   width: 100%;
+  margin: 0;
+  padding-right: 1.1em;
+  font-size: 10px;
+  color: #888;
+}
+.centered.svelte-17kdrls textarea.svelte-17kdrls {
+  width: 100%;
+  display: inline-block;
   height: auto;
   padding: 0.35em 0.6em;
-  margin: 0 0.66em 0.66em 0;
+  margin: 0 0 0.66em 0;
+  font-family: Inter, sans-serif;
+  font-feature-settings: "liga", "calt";
+  font-size: 12px;
+  font-weight: 400;
+  font-stretch: 100%;
 }
 
 /* fakecss:/home/florian-neumann/github/figma-semantic-versioning/lib/App.esbuild-svelte-fake-css */
@@ -5840,9 +5856,6 @@ label.svelte-qhon93.svelte-qhon93 {
     if (text2.wholeText !== data)
       text2.data = data;
   }
-  function set_input_value(input, value) {
-    input.value = value == null ? "" : value;
-  }
   var current_component;
   function set_current_component(component) {
     current_component = component;
@@ -6540,20 +6553,20 @@ label.svelte-qhon93.svelte-qhon93 {
   var import_lodash = __toESM(require_lodash());
   function get_each_context2(ctx, list, i) {
     const child_ctx = ctx.slice();
-    child_ctx[10] = list[i];
+    child_ctx[8] = list[i];
     return child_ctx;
   }
   function create_if_block_4(ctx) {
     let span;
     let t0;
-    let t1_value = ctx[3][ctx[10].label].description + "";
+    let t1_value = ctx[3][ctx[8].label].description + "";
     let t1;
     return {
       c() {
         span = element("span");
         t0 = text("\\xB7\\xA0");
         t1 = text(t1_value);
-        attr(span, "class", "description svelte-qhon93");
+        attr(span, "class", "description svelte-17kdrls");
       },
       m(target, anchor) {
         insert(target, span, anchor);
@@ -6561,7 +6574,7 @@ label.svelte-qhon93.svelte-qhon93 {
         append(span, t1);
       },
       p(ctx2, dirty) {
-        if (dirty & 1 && t1_value !== (t1_value = ctx2[3][ctx2[10].label].description + ""))
+        if (dirty & 1 && t1_value !== (t1_value = ctx2[3][ctx2[8].label].description + ""))
           set_data(t1, t1_value);
       },
       d(detaching) {
@@ -6571,10 +6584,10 @@ label.svelte-qhon93.svelte-qhon93 {
     };
   }
   function create_if_block_22(ctx) {
-    let t0_value = ctx[4](ctx[10].label) + "";
+    let t0_value = ctx[4](ctx[8].label) + "";
     let t0;
     let t1;
-    let if_block = ctx[10].label === "toName" && create_if_block_3(ctx);
+    let if_block = ctx[8].label === "toName" && create_if_block_3(ctx);
     return {
       c() {
         if (if_block)
@@ -6589,7 +6602,7 @@ label.svelte-qhon93.svelte-qhon93 {
         insert(target, t1, anchor);
       },
       p(ctx2, dirty) {
-        if (ctx2[10].label === "toName") {
+        if (ctx2[8].label === "toName") {
           if (if_block) {
           } else {
             if_block = create_if_block_3(ctx2);
@@ -6600,7 +6613,7 @@ label.svelte-qhon93.svelte-qhon93 {
           if_block.d(1);
           if_block = null;
         }
-        if (dirty & 1 && t0_value !== (t0_value = ctx2[4](ctx2[10].label) + ""))
+        if (dirty & 1 && t0_value !== (t0_value = ctx2[4](ctx2[8].label) + ""))
           set_data(t0, t0_value);
       },
       d(detaching) {
@@ -6651,21 +6664,21 @@ label.svelte-qhon93.svelte-qhon93 {
     let t0;
     let label;
     let div0;
-    let t1_value = ctx[3][ctx[10].label].label + "";
+    let t1_value = ctx[3][ctx[8].label].label + "";
     let t1;
     let t2;
     let t3;
     let div1;
     let t4;
-    let t5_value = (ctx[10].version || "not versioned") + "";
+    let t5_value = (ctx[8].version || "not versioned") + "";
     let t5;
     let label_for_value;
     let t6;
     let mounted;
     let dispose;
-    let if_block0 = ctx[3][ctx[10].label].description && create_if_block_4(ctx);
-    let if_block1 = ctx[10].label !== "keep" && create_if_block_22(ctx);
-    let if_block2 = ctx[10].label === "toName" && ctx[10].version && create_if_block_12(ctx);
+    let if_block0 = ctx[3][ctx[8].label].description && create_if_block_4(ctx);
+    let if_block1 = ctx[8].label !== "keep" && create_if_block_22(ctx);
+    let if_block2 = ctx[8].label === "toName" && ctx[8].version && create_if_block_12(ctx);
     return {
       c() {
         div2 = element("div");
@@ -6688,21 +6701,21 @@ label.svelte-qhon93.svelte-qhon93 {
         t6 = space();
         attr(input, "type", "radio");
         attr(input, "name", "action");
-        attr(input, "id", input_id_value = ctx[10].label);
-        input.__value = input_value_value = ctx[10].label;
+        attr(input, "id", input_id_value = ctx[8].label);
+        input.__value = input_value_value = ctx[8].label;
         input.value = input.__value;
-        attr(input, "class", "svelte-qhon93");
-        ctx[8][0].push(input);
-        attr(div0, "class", "header svelte-qhon93");
-        attr(div1, "class", "body svelte-qhon93");
-        attr(label, "for", label_for_value = ctx[10].label);
-        attr(label, "class", "svelte-qhon93");
-        attr(div2, "class", "list-element svelte-qhon93");
+        attr(input, "class", "svelte-17kdrls");
+        ctx[7][0].push(input);
+        attr(div0, "class", "header svelte-17kdrls");
+        attr(div1, "class", "body svelte-17kdrls");
+        attr(label, "for", label_for_value = ctx[8].label);
+        attr(label, "class", "svelte-17kdrls");
+        attr(div2, "class", "list-element svelte-17kdrls");
       },
       m(target, anchor) {
         insert(target, div2, anchor);
         append(div2, input);
-        input.checked = input.__value === ctx[2];
+        input.checked = input.__value === ctx[1];
         append(div2, t0);
         append(div2, label);
         append(label, div0);
@@ -6720,24 +6733,24 @@ label.svelte-qhon93.svelte-qhon93 {
         append(div1, t5);
         append(div2, t6);
         if (!mounted) {
-          dispose = listen(input, "change", ctx[7]);
+          dispose = listen(input, "change", ctx[6]);
           mounted = true;
         }
       },
       p(ctx2, dirty) {
-        if (dirty & 1 && input_id_value !== (input_id_value = ctx2[10].label)) {
+        if (dirty & 1 && input_id_value !== (input_id_value = ctx2[8].label)) {
           attr(input, "id", input_id_value);
         }
-        if (dirty & 1 && input_value_value !== (input_value_value = ctx2[10].label)) {
+        if (dirty & 1 && input_value_value !== (input_value_value = ctx2[8].label)) {
           input.__value = input_value_value;
           input.value = input.__value;
         }
-        if (dirty & 4) {
-          input.checked = input.__value === ctx2[2];
+        if (dirty & 2) {
+          input.checked = input.__value === ctx2[1];
         }
-        if (dirty & 1 && t1_value !== (t1_value = ctx2[3][ctx2[10].label].label + ""))
+        if (dirty & 1 && t1_value !== (t1_value = ctx2[3][ctx2[8].label].label + ""))
           set_data(t1, t1_value);
-        if (ctx2[3][ctx2[10].label].description) {
+        if (ctx2[3][ctx2[8].label].description) {
           if (if_block0) {
             if_block0.p(ctx2, dirty);
           } else {
@@ -6749,7 +6762,7 @@ label.svelte-qhon93.svelte-qhon93 {
           if_block0.d(1);
           if_block0 = null;
         }
-        if (ctx2[10].label !== "keep") {
+        if (ctx2[8].label !== "keep") {
           if (if_block1) {
             if_block1.p(ctx2, dirty);
           } else {
@@ -6761,7 +6774,7 @@ label.svelte-qhon93.svelte-qhon93 {
           if_block1.d(1);
           if_block1 = null;
         }
-        if (ctx2[10].label === "toName" && ctx2[10].version) {
+        if (ctx2[8].label === "toName" && ctx2[8].version) {
           if (if_block2) {
           } else {
             if_block2 = create_if_block_12(ctx2);
@@ -6772,16 +6785,16 @@ label.svelte-qhon93.svelte-qhon93 {
           if_block2.d(1);
           if_block2 = null;
         }
-        if (dirty & 1 && t5_value !== (t5_value = (ctx2[10].version || "not versioned") + ""))
+        if (dirty & 1 && t5_value !== (t5_value = (ctx2[8].version || "not versioned") + ""))
           set_data(t5, t5_value);
-        if (dirty & 1 && label_for_value !== (label_for_value = ctx2[10].label)) {
+        if (dirty & 1 && label_for_value !== (label_for_value = ctx2[8].label)) {
           attr(label, "for", label_for_value);
         }
       },
       d(detaching) {
         if (detaching)
           detach(div2);
-        ctx[8][0].splice(ctx[8][0].indexOf(input), 1);
+        ctx[7][0].splice(ctx[7][0].indexOf(input), 1);
         if (if_block0)
           if_block0.d();
         if (if_block1)
@@ -6794,57 +6807,59 @@ label.svelte-qhon93.svelte-qhon93 {
     };
   }
   function create_if_block2(ctx) {
-    let div;
     let label;
+    let t0;
     let t1;
+    let div;
     let textarea;
     let textarea_disabled_value;
     let mounted;
     let dispose;
     return {
       c() {
-        div = element("div");
         label = element("label");
-        label.textContent = \`\${commitMessageRemainingCharacters()}\`;
+        t0 = text(ctx[2]);
         t1 = space();
+        div = element("div");
         textarea = element("textarea");
+        attr(label, "class", "textarea-label svelte-17kdrls");
         attr(label, "for", "commit-message");
-        attr(label, "class", "svelte-qhon93");
         attr(textarea, "id", "commit-message");
-        textarea.disabled = textarea_disabled_value = isCommitMessageDisabled(ctx[2]);
+        textarea.value = commitMessage;
+        textarea.disabled = textarea_disabled_value = isCommitMessageDisabled(ctx[1]);
         attr(textarea, "rows", "3");
         attr(textarea, "maxlength", "144");
         attr(textarea, "placeholder", "What is changing with your release?");
-        attr(textarea, "class", "svelte-qhon93");
-        attr(div, "class", "centered svelte-qhon93");
+        attr(textarea, "class", "svelte-17kdrls");
+        attr(div, "class", "centered svelte-17kdrls");
       },
       m(target, anchor) {
+        insert(target, label, anchor);
+        append(label, t0);
+        insert(target, t1, anchor);
         insert(target, div, anchor);
-        append(div, label);
-        append(div, t1);
         append(div, textarea);
-        set_input_value(textarea, ctx[1]);
         if (!mounted) {
-          dispose = [
-            listen(textarea, "input", ctx[9]),
-            listen(textarea, "input", ctx[6]())
-          ];
+          dispose = listen(textarea, "input", ctx[5]);
           mounted = true;
         }
       },
       p(ctx2, dirty) {
-        if (dirty & 4 && textarea_disabled_value !== (textarea_disabled_value = isCommitMessageDisabled(ctx2[2]))) {
+        if (dirty & 4)
+          set_data(t0, ctx2[2]);
+        if (dirty & 2 && textarea_disabled_value !== (textarea_disabled_value = isCommitMessageDisabled(ctx2[1]))) {
           textarea.disabled = textarea_disabled_value;
-        }
-        if (dirty & 2) {
-          set_input_value(textarea, ctx2[1]);
         }
       },
       d(detaching) {
         if (detaching)
+          detach(label);
+        if (detaching)
+          detach(t1);
+        if (detaching)
           detach(div);
         mounted = false;
-        run_all(dispose);
+        dispose();
       }
     };
   }
@@ -6882,11 +6897,11 @@ label.svelte-qhon93.svelte-qhon93 {
         div1 = element("div");
         button = element("button");
         t4 = text("save");
-        attr(h4, "class", "svelte-qhon93");
-        attr(div0, "class", "container svelte-qhon93");
-        button.disabled = button_disabled_value = !ctx[2] || ctx[2] === "keep";
-        attr(button, "class", "svelte-qhon93");
-        attr(div1, "class", "centered svelte-qhon93");
+        attr(h4, "class", "svelte-17kdrls");
+        attr(div0, "class", "container svelte-17kdrls");
+        button.disabled = button_disabled_value = !ctx[1] || ctx[1] === "keep";
+        attr(button, "class", "svelte-17kdrls");
+        attr(div1, "class", "centered svelte-17kdrls");
       },
       m(target, anchor) {
         insert(target, div0, anchor);
@@ -6904,15 +6919,15 @@ label.svelte-qhon93.svelte-qhon93 {
         append(button, t4);
         if (!mounted) {
           dispose = listen(button, "click", function() {
-            if (is_function(ctx[5](ctx[2], ctx[0])))
-              ctx[5](ctx[2], ctx[0]).apply(this, arguments);
+            if (is_function(saveAction(ctx[1], ctx[0])))
+              saveAction(ctx[1], ctx[0]).apply(this, arguments);
           });
           mounted = true;
         }
       },
       p(new_ctx, [dirty]) {
         ctx = new_ctx;
-        if (dirty & 29) {
+        if (dirty & 27) {
           each_value = ctx[0];
           let i;
           for (i = 0; i < each_value.length; i += 1) {
@@ -6932,7 +6947,7 @@ label.svelte-qhon93.svelte-qhon93 {
         }
         if (useCommitMessage)
           if_block.p(ctx, dirty);
-        if (dirty & 4 && button_disabled_value !== (button_disabled_value = !ctx[2] || ctx[2] === "keep")) {
+        if (dirty & 2 && button_disabled_value !== (button_disabled_value = !ctx[1] || ctx[1] === "keep")) {
           button.disabled = button_disabled_value;
         }
       },
@@ -6955,6 +6970,7 @@ label.svelte-qhon93.svelte-qhon93 {
       }
     };
   }
+  var commitMessage = null;
   var settings = null;
   var commitMessageMaxLength = 144;
   function isCommitMessageDisabled(selection) {
@@ -6963,10 +6979,21 @@ label.svelte-qhon93.svelte-qhon93 {
   function useCommitMessage() {
     return settings && settings.useCommitMessage;
   }
+  function saveAction(selection, actions) {
+    const action = actions.find((a) => a.label === selection);
+    parent.postMessage({
+      pluginMessage: {
+        type: "updateVersion",
+        commitMessage: useCommitMessage ? commitMessage : void 0,
+        action
+      }
+    }, "*");
+    selection = "keep";
+  }
   function instance3($self, $props, $invalidate) {
+    let commitMessageRemainingCharacters;
     let { actions = [] } = $props;
     let selection = "keep";
-    let commitMessage = null;
     const labels = {
       keep: { label: "Keep", description: "" },
       initial: {
@@ -7008,56 +7035,37 @@ label.svelte-qhon93.svelte-qhon93 {
         return action.version || "not versioned";
       }
     }
-    function saveAction(selection2, actions2) {
-      const action = actions2.find((a) => a.label === selection2);
-      console.log(selection2, actions2, action);
-      parent.postMessage({
-        pluginMessage: {
-          type: "updateVersion",
-          commitMessage: useCommitMessage ? commitMessage : void 0,
-          action
-        }
-      }, "*");
-      selection2 = "keep";
-    }
     const updateCommitMessage = (0, import_lodash.debounce)((e) => {
+      const action = actions.find((a) => a.nodeId);
+      const nodeId = action.nodeId;
       parent.postMessage({
         pluginMessage: {
           type: "updateCommitMessage",
-          commitMessage
+          commitMessage: e.target.value,
+          nodeId
         }
       }, "*");
-    }, 300);
+    }, 266);
     const $binding_groups = [[]];
     function input_change_handler() {
       selection = this.__value;
-      $invalidate(2, selection);
-    }
-    function textarea_input_handler() {
-      commitMessage = this.value;
-      $invalidate(1, commitMessage);
+      $invalidate(1, selection);
     }
     $self.$set = ($props2) => {
       if ("actions" in $props2)
         $invalidate(0, actions = $props2.actions);
     };
-    $self.$.update = () => {
-      if ($self.$.dirty & 2) {
-        $:
-          (commitMessageRemainingCharacters2) => commitMessageMaxLength - (commitMessage ? commitMessage.length : 0);
-      }
-    };
+    $:
+      $invalidate(2, commitMessageRemainingCharacters = commitMessageMaxLength - (commitMessage !== null ? commitMessage.length : 0));
     return [
       actions,
-      commitMessage,
       selection,
+      commitMessageRemainingCharacters,
       labels,
       currentVersionFor,
-      saveAction,
       updateCommitMessage,
       input_change_handler,
-      $binding_groups,
-      textarea_input_handler
+      $binding_groups
     ];
   }
   var ActionList = class extends SvelteComponent {
@@ -7302,8 +7310,9 @@ label.svelte-qhon93.svelte-qhon93 {
   function instance4($self, $props, $invalidate) {
     let type = "loading";
     let data = null;
+    let history = null;
     let settings2 = null;
-    let commitMessage = null;
+    let commitMessage2 = null;
     onMount(() => {
       parent.postMessage({ pluginMessage: { type: "settings" } }, "*");
     });
@@ -7316,11 +7325,14 @@ label.svelte-qhon93.svelte-qhon93 {
         default:
           $invalidate(0, type = message.type);
           $invalidate(1, data = message.data);
-          $invalidate(3, commitMessage = message.commitMessage);
+          history = message.history;
+          if (history.length > 0 && !history[0].version && history[0].commitMessage) {
+            $invalidate(3, commitMessage2 = history[0].commitMessage);
+          }
           break;
       }
     };
-    return [type, data, settings2, commitMessage];
+    return [type, data, settings2, commitMessage2];
   }
   var App = class extends SvelteComponent {
     constructor(options) {
@@ -7356,7 +7368,7 @@ label.svelte-qhon93.svelte-qhon93 {
 
 // code.ts
 var versionRegex = /@(\d+\.\d+\.\d+(-rfc\.\d+)?)$/im;
-function deriveActions(node, version, useRfc, updateName) {
+function deriveActions(node, version, useRfc, updateName, useCommitMessage) {
   const versionFromName = getVersionFromName(node);
   const actions = [{
     version: version ? version.toString() : null,
@@ -7389,6 +7401,18 @@ function deriveActions(node, version, useRfc, updateName) {
       nameVersion: versionFromName ? versionFromName.toString() : void 0
     });
   }
+  if (useCommitMessage) {
+    const history = Plugin.getHistory(node) || [];
+    const lastCommit = history.find((h) => h.version);
+    if (lastCommit && lastCommit.commitMessage.length > 0) {
+      actions.push({
+        nodeId: node.id,
+        version: lastCommit.version.toString(),
+        commitMessage: lastCommit.commitMessage,
+        label: "revert"
+      });
+    }
+  }
   return actions;
 }
 function getVersionFromName(node) {
@@ -7417,6 +7441,7 @@ figma.on("close", () => {
   figma.off("selectionchange", selectionChange);
 });
 figma.ui.onmessage = (message) => {
+  console.log(message);
   switch (message.type) {
     case "settings": {
       const settings = __spreadValues({
@@ -7440,13 +7465,41 @@ figma.ui.onmessage = (message) => {
     case "updateVersion": {
       const action = message.action;
       const node = figma.getNodeById(action.nodeId);
-      const { updateName } = Plugin.getConfig("settings") || {};
+      const { updateName, useCommitMessage } = Plugin.getConfig("settings") || {};
       const version = action.version ? new Version(action.version) : "";
       Plugin.setVersion(node, version);
       if (updateName) {
         updateVersionInName(node, version);
       }
+      if (useCommitMessage && version !== "") {
+        const commitMessage = message.commitMessage;
+        const history = Plugin.getHistory(node) || [];
+        if (history.length > 0 && !history[0].version) {
+          history[0].version = version;
+          history[0].commitMessage = commitMessage;
+        } else {
+          history.unshift({
+            version,
+            commitMessage
+          });
+        }
+        Plugin.setHistory(node, history);
+      }
       updateUi();
+      break;
+    }
+    case "updateCommitMessage": {
+      const node = figma.getNodeById(message.nodeId);
+      const commitMessage = message.commitMessage;
+      const history = Plugin.getHistory(node) || [];
+      if (history.length > 0 && !history[0].version) {
+        history[0].commitMessage = commitMessage;
+      } else {
+        history.unshift({
+          commitMessage
+        });
+      }
+      Plugin.setHistory(node, history);
       break;
     }
     default: {
@@ -7461,11 +7514,11 @@ function updateUi(hasSelectionChanged = false) {
     let message = null;
     const uiOptions = {};
     if (selection.length === 1) {
-      const { useRfc, updateName } = Plugin.getConfig("settings") || {};
+      const { useRfc, updateName, useCommitMessage } = Plugin.getConfig("settings") || {};
       const node = selection[0];
       const version = Plugin.getVersion(node);
       const history = Plugin.getHistory(node);
-      const actions = deriveActions(node, version, useRfc, updateName);
+      const actions = deriveActions(node, version, useRfc, updateName, useCommitMessage);
       uiOptions.title = node.name;
       message = {
         type: "actions",

@@ -21,6 +21,7 @@ export interface ActionObject {
 	nodeId?: string;
 	label: string;
 	nameVersion?: string;
+	commitMessage?: string;
 }
 
 export default class Action {

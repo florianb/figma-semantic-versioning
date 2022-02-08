@@ -70,8 +70,6 @@
 	function saveAction(selection, actions) {
 		const action = actions.find((a) => a.label === selection);
 
-		console.log(selection, actions, action);
-
 		parent.postMessage(
 			{
 				pluginMessage: {
@@ -87,19 +85,24 @@
 	}
 
 	const updateCommitMessage = debounce((e) => {
+		const action = actions.find((a) => a.nodeId);
+		const nodeId = action.nodeId;
+
 		parent.postMessage(
 			{
 				pluginMessage: {
 					type: "updateCommitMessage",
-					commitMessage,
+					commitMessage: e.target.value,
+					nodeId,
 				},
 			},
 			"*"
 		);
-	}, 300);
+	}, 266);
 
-	$: (commitMessageRemainingCharacters) =>
-		commitMessageMaxLength - (commitMessage ? commitMessage.length : 0);
+	$: commitMessageRemainingCharacters =
+		commitMessageMaxLength -
+		(commitMessage !== null ? commitMessage.length : 0);
 </script>
 
 <div class="container">
@@ -137,13 +140,15 @@
 </div>
 
 {#if useCommitMessage}
+	<label class="textarea-label" for="commit-message"
+		>{commitMessageRemainingCharacters}</label
+	>
 	<div class="centered">
-		<label for="commit-message">{commitMessageRemainingCharacters}</label>
 		<textarea
 			id="commit-message"
 			bind:value={commitMessage}
 			disabled={isCommitMessageDisabled(selection)}
-			on:input={updateCommitMessage()}
+			on:input={updateCommitMessage}
 			rows="3"
 			maxlength="144"
 			placeholder="What is changing with your release?"
@@ -223,10 +228,27 @@
 		transition: all 0.5s;
 	}
 
+	.textarea-label {
+		display: inline-block;
+		text-align: right;
+		box-sizing: border-box;
+		width: 100%;
+		margin: 0;
+		padding-right: 1.1em;
+		font-size: 10px;
+		color: #888;
+	}
 	.centered textarea {
 		width: 100%;
+		display: inline-block;
 		height: auto;
 		padding: 0.35em 0.6em;
-		margin: 0 0.66em 0.66em 0;
+		margin: 0 0 0.66em 0;
+
+		font-family: Inter, sans-serif;
+		font-feature-settings: "liga", "calt";
+		font-size: 12px;
+		font-weight: 400;
+		font-stretch: 100%;
 	}
 </style>
