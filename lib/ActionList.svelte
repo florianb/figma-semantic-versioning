@@ -2,10 +2,10 @@
 	import { debounce } from "lodash";
 
 	export let actions = [];
+	export let commitMessage = null;
+	export let useCommitMessage = null;
 
 	let selection = "keep";
-	let commitMessage = null;
-	let settings = null;
 
 	const commitMessageMaxLength = 144;
 	const labels = {
@@ -45,7 +45,21 @@
 			label: "To Appendix",
 			description: "Set appendix by inner version",
 		},
+		revert: {
+			label: "Revert",
+			description: "Revert version tag to previous",
+		},
 	};
+
+	$: isCommitMessageDisabled = [
+		"keep",
+		"revert",
+		"fromName",
+		"toName",
+	].includes(selection);
+	$: commitMessageRemainingCharacters =
+		commitMessageMaxLength -
+		(commitMessage !== null ? commitMessage.length : 0);
 
 	function currentVersionFor(label) {
 		const currentAction = actions.find((a) => a.label === label);
@@ -57,14 +71,6 @@
 
 			return action.version || "not versioned";
 		}
-	}
-
-	function isCommitMessageDisabled(selection) {
-		return selection === "keep";
-	}
-
-	function useCommitMessage() {
-		return settings && settings.useCommitMessage;
 	}
 
 	function saveAction(selection, actions) {
@@ -99,10 +105,6 @@
 			"*"
 		);
 	}, 266);
-
-	$: commitMessageRemainingCharacters =
-		commitMessageMaxLength -
-		(commitMessage !== null ? commitMessage.length : 0);
 </script>
 
 <div class="container">
@@ -147,7 +149,7 @@
 		<textarea
 			id="commit-message"
 			bind:value={commitMessage}
-			disabled={isCommitMessageDisabled(selection)}
+			disabled={isCommitMessageDisabled}
 			on:input={updateCommitMessage}
 			rows="3"
 			maxlength="144"

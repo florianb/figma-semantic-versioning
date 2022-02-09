@@ -9,11 +9,12 @@ interface SettingsObject {
 	useRfc?: boolean;
 	updateName?: boolean;
 	useCommitMessage?: boolean;
+	saveToFigmaVersionHistory?: boolean;
 }
 
 const versionRegex = /@(\d+\.\d+\.\d+(-rfc\.\d+)?)$/im;
 
-function deriveActions(node: BaseNode, version?: Version, useRfc?: boolean, updateName?: boolean, useCommitMessage?: boolean): ActionObject[] {
+function deriveActions(node: BaseNode, settings: SettingsObject, version?: Version): ActionObject[] {
 	const versionFromName = getVersionFromName(node);
 	const actions: ActionObject[] = [{
 		version: version ? version.toString() : null,
@@ -23,7 +24,7 @@ function deriveActions(node: BaseNode, version?: Version, useRfc?: boolean, upda
 	if (version) {
 		const options
 			= version
-				.deriveOptions(useRfc)
+				.deriveOptions(settings.useRfc)
 				.map(versionObject => {
 					const newVersion = new Version(versionObject);
 					const label = version.elevatedLevel(newVersion) || 'keep';
@@ -34,7 +35,7 @@ function deriveActions(node: BaseNode, version?: Version, useRfc?: boolean, upda
 
 		actions.push(...options);
 	} else {
-		const initialVersion = new Version(undefined, useRfc);
+		const initialVersion = new Version(undefined, settings.useRfc);
 		const action = new Action(node, initialVersion, 'initial');
 
 		actions.push(action.toObject());
@@ -42,7 +43,7 @@ function deriveActions(node: BaseNode, version?: Version, useRfc?: boolean, upda
 
 	const hasOneVersionUndefined = (!versionFromName !== !version);
 	const hasDifferentVersion = (Boolean(versionFromName) && Boolean(version) && !version.equals(versionFromName));
-	if (updateName && (hasOneVersionUndefined || hasDifferentVersion)) {
+	if (settings.updateName && (hasOneVersionUndefined || hasDifferentVersion)) {
 		actions.push({
 			nodeId: node.id,
 			version: versionFromName ? versionFromName.toString() : undefined,
@@ -55,18 +56,15 @@ function deriveActions(node: BaseNode, version?: Version, useRfc?: boolean, upda
 		});
 	}
 
-	if (useCommitMessage) {
-		const history = Plugin.getHistory(node) || [];
-		const lastCommit = history.find(h => h.version);
+	const history = Plugin.getHistory(node) || [];
 
-		if (lastCommit && lastCommit.commitMessage.length > 0) {
-			actions.push({
-				nodeId: node.id,
-				version: lastCommit.version.toString(),
-				commitMessage: lastCommit.commitMessage,
-				label: 'revert',
-			});
-		}
+	if (history.length > 1) {
+		actions.push({
+			nodeId: node.id,
+			version: history[1].version.toString(),
+			commitMessage: history[1].commitMessage,
+			label: 'revert',
+		});
 	}
 
 	return actions;
@@ -98,6 +96,86 @@ function updateVersionInName(node: BaseNode, version?: Version | string): void {
 	}
 }
 
+function updateSettings(message: any): void {
+	const oldSettings = (Plugin.getConfig('settings') || {}) as SettingsObject;
+	const newSettings = {...oldSettings, ...(message.settings as SettingsObject)};
+
+	Plugin.setConfig('settings', newSettings);
+}
+
+function updateCommitMessage(message: any): void {
+	const node = figma.getNodeById(message.nodeId as string);
+	const commitMessage = message.commitMessage as string;
+	const history = Plugin.getHistory(node) || [];
+
+	if (history.length > 0 && !history[0].version) {
+		history[0].commitMessage = commitMessage;
+	} else {
+		history.unshift({
+			commitMessage,
+		});
+	}
+
+	Plugin.setHistory(node, history);
+}
+
+function updateVersion(message: any): void {
+	const action = message.action as ActionObject;
+	const node = figma.getNodeById(action.nodeId);
+	const {updateName, useCommitMessage, saveToFigmaVersionHistory} = (Plugin.getConfig('settings') || {}) as SettingsObject;
+	const version = action.version ? new Version(action.version) : '';
+
+	Plugin.setVersion(node, version);
+	if (updateName) {
+		updateVersionInName(node, version);
+	}
+
+	if (version !== '') {
+		const history = Plugin.getHistory(node) || [];
+
+		if (action.label === 'revert') {
+			if (history.length > 0 && history[0].version === undefined) {
+				history.shift();
+			}
+
+			if (history.length > 0) {
+				history[0].version = undefined;
+			}
+		} else {
+			const commitMessage = useCommitMessage ? message.commitMessage as string : undefined;
+
+			if (history.length > 0 && !history[0].version) {
+				history[0].version = new Version(version);
+				history[0].commitMessage = commitMessage;
+			} else {
+				history.unshift({
+					version: new Version(version),
+					commitMessage,
+				});
+			}
+		}
+
+		Plugin.setHistory(node, history);
+	}
+
+	if (saveToFigmaVersionHistory
+		&& version !== ''
+		&& ['major', 'minor', 'patch', 'rfc', 'release', 'initial'].includes(action.label)) {
+		const commitMessage = message.commitMessage as string || undefined;
+		const name = node.name;
+		const titleParts = name.split('@');
+		let title = name;
+
+		if (Version.pattern.test(titleParts.slice(-1)[0])) {
+			title = titleParts.slice(0, -1).join('@');
+		}
+
+		title = `${title}@${version.toString()}`;
+
+		void figma.saveVersionHistoryAsync(title, commitMessage);
+	}
+}
+
 const selectionChange = (): void => {
 	updateUi(true);
 };
@@ -109,14 +187,13 @@ figma.on('close', () => {
 
 // eslint-disable-next-line unicorn/prefer-add-event-listener
 figma.ui.onmessage = message => {
-	console.log(message);
-
 	switch (message.type) {
 		case 'settings': {
 			const settings: SettingsObject = {
 				useRfc: false,
 				useCommitMessage: false,
 				updateName: false,
+				saveToFigmaVersionHistory: false,
 				...(Plugin.getConfig('settings') as SettingsObject),
 			};
 
@@ -128,61 +205,19 @@ figma.ui.onmessage = message => {
 		}
 
 		case 'updateSettings': {
-			const oldSettings = (Plugin.getConfig('settings') || {}) as SettingsObject;
-			const newSettings = {...oldSettings, ...(message.settings as SettingsObject)};
-
-			Plugin.setConfig('settings', newSettings);
-
+			updateSettings(message);
 			updateUi();
 			break;
 		}
 
 		case 'updateVersion': {
-			const action = message.action as ActionObject;
-			const node = figma.getNodeById(action.nodeId);
-			const {updateName, useCommitMessage} = (Plugin.getConfig('settings') || {}) as SettingsObject;
-			const version = action.version ? new Version(action.version) : '';
-
-			Plugin.setVersion(node, version);
-			if (updateName) {
-				updateVersionInName(node, version);
-			}
-
-			if (useCommitMessage && version !== '') {
-				const commitMessage = message.commitMessage as string;
-				const history = Plugin.getHistory(node) || [];
-
-				if (history.length > 0 && !history[0].version) {
-					history[0].version = version;
-					history[0].commitMessage = commitMessage;
-				} else {
-					history.unshift({
-						version,
-						commitMessage,
-					});
-				}
-
-				Plugin.setHistory(node, history);
-			}
-
+			updateVersion(message);
 			updateUi();
 			break;
 		}
 
 		case 'updateCommitMessage': {
-			const node = figma.getNodeById(message.nodeId as string);
-			const commitMessage = message.commitMessage as string;
-			const history = Plugin.getHistory(node) || [];
-
-			if (history.length > 0 && !history[0].version) {
-				history[0].commitMessage = commitMessage;
-			} else {
-				history.unshift({
-					commitMessage,
-				});
-			}
-
-			Plugin.setHistory(node, history);
+			updateCommitMessage(message);
 			break;
 		}
 
@@ -201,12 +236,11 @@ function updateUi(hasSelectionChanged = false) {
 		const uiOptions: ShowUIOptions = {};
 
 		if (selection.length === 1) {
-			const {useRfc, updateName, useCommitMessage} = (Plugin.getConfig('settings') || {}) as SettingsObject;
+			const settings = (Plugin.getConfig('settings') || {}) as SettingsObject;
 			const node = selection[0] as BaseNode;
 			const version = Plugin.getVersion(node);
 			const history = Plugin.getHistory(node);
-
-			const actions = deriveActions(node, version, useRfc, updateName, useCommitMessage);
+			const actions = deriveActions(node, settings, version);
 
 			uiOptions.title = node.name;
 			message = {

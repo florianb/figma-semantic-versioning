@@ -27,6 +27,7 @@
 				history = message.history;
 
 				if (
+					history &&
 					history.length > 0 &&
 					!history[0].version &&
 					history[0].commitMessage
@@ -42,7 +43,11 @@
 	{#if type === "list"}
 		<NodeList nodes={data} />
 	{:else if type === "actions"}
-		<ActionList actions={data} {commitMessage} {settings} />
+		<ActionList
+			actions={data}
+			{commitMessage}
+			useCommitMessage={settings && settings.useCommitMessage}
+		/>
 	{/if}
 
 	{#if settings !== null}
@@ -50,6 +55,7 @@
 			useRfc={settings.useRfc}
 			useCommitMessage={settings.useCommitMessage}
 			updateName={settings.updateName}
+			saveToFigmaVersionHistory={settings.saveToFigmaVersionHistory}
 		/>
 	{/if}
 </div>

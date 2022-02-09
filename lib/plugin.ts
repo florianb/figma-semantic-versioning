@@ -65,7 +65,17 @@ export default abstract class Plugin {
 
 	// Set History
 	public static setHistory(node: BaseNode, history?: HistoryObject[]) {
-		Plugin.setNode(node, 'history', history);
+		if (history) {
+			history = history.slice(0, 5);
+		}
+
+		const stringifiedHistory = history.map(h => ({
+			version: h?.version?.toString(),
+			commitMessage: h?.commitMessage,
+		}));
+
+		console.log(stringifiedHistory, history);
+		Plugin.setNode(node, 'history', stringifiedHistory);
 	}
 
 	private static packValue(value: any): string {

@@ -2,10 +2,13 @@
 
 Simplified [Semantic Versioning][semver] for your Figma Nodes without external dependencies and consumable via API.
 
-
 # Recent Changes
 
-- Minor ui changes to improve readability
+- Major ui changes to allow the change of selection while the plugin is opened.
+- Add support for save of "Figma document version" on version change.
+- Add support for plugin-internal version history enabling a "revert".
+- Add support for commit messages.
+- Minor ui changes to improve readability.
 - Fix behavior of "Available Options" list to be reset to "Keep" after save.
 
 ## Introduction
@@ -20,77 +23,9 @@ This plugin has **no** external dependencies, the version information is saved i
 
 >> Be aware the meaning of the word "backend" depends highly on your project setup. In a progressive web app the "backend" is usually a front-end implementation whereas backend in a classical server-based webpage will be the actual server-side webapp implementation.
 
-## How to use this Plugin?
+## User guide
 
-Select one or more nodes and run the plugin.
-
-If you select multiple nodes you will get a list of the selected nodes with their current version status read from the internal plugin data.
-
-If you select a single node you will get an interface to change the current version of that node according to the implemented version workflow.
-
-## How to use the Version Workflow?
-
-The version number consist of three to four numerical parts:
-
-```
-MAJOR.MINOR.PATCH(-rfc.RFC)
-```
-
-The Rfc-part in brackets is optional and depends on the "requests for comments" setting.
-
-The numbers are supposed to increment only. Goal of providing the version numbers is to allow automagical dependency checking by dependent systems.
-
-#### MAJOR
-
-The MAJOR-release number increase marks a **backward-incompatible** change of your design.
-
-Imagine you changed a frame containing a form by removing an input. As you can imagine this will break the current implementation of the app using this design because the app actually works with that input and might expect a value attached to it.
-
-Propagating this change will likely break the backend-implementation. You communicate this by increasing the major release number by one actually saying this is a backward-incompatible change. And you expect it to break the current implementation.
-
-#### MINOR
-
-The MINOR-release number increase marks a **backward-compatible** change of your design, usually by adding a feature.
-
-Imagine you extended the functionality of a frame by changing the design to display an additional input element. While this will require backend work to make the input actually work, rolling out the deign won't break the application. So that is a backward compatible change of the current design.
-
-Increasing the MINOR release version communicates you added a change which might require backend work but won't break the current backend implementation.
-
-#### PATCH
-
-The PATCH-release number increase marks a simple fix of your design which does not require any backend work.
-
-Let's say you adjust some colors or got a ticket telling you a responsiveness feature isn't working as expected. By fixing this you correct the intentional implementation of the current design.
-
-By using the PATCH version number you communicate there is no change in the backend-interface of your design and it won't require any backend changes.
-
-#### RFC
-
-Depending on your surrounding development process you might not be able to decide on your own when a design is ready to release. In this case you are able to enable the "request for comments"-based workflow.
-
-The Rfc-workflow adds a `-rfc.1`-postfix reflecting the current iteration in your approval process.
-
-Let's say you make a first draft of a form, since it's a minor change, you choose to add a minor-change and because you have the rfc-workflow enabled you're only minor release option (given your current version is `1.0.0`) is `1.1.0-rfc.1`. This communicates you drafted a first version of the intended minor change.
-
-Your team then discusses your draft and gives you some feedback which requires changes. After these changes you increase the Rfc number resulting in `1.1.0-rfc.2`. After another discussion with your team all are fine with the changes and you release the design to `1.1.0`.
-
-## How to use the Settings?
-
-The settings are saved per document. That said you will have to adjust the settings once per document.
-
-### Use "request for comments"
-
-Checking this option enables a "pre-release" path for your versioning which adds the `-rfc.<<number>>` counter to the version. Using this feature allows you to mark your changes as a "proposal" depending on the workflow your design work is embedded in.
-
-Unchecking this option changes only the available options for you next version change and does **not** automatically change any saved versions in the document.
-
-### Use version appendix at Node names
-
-Checking this option enables `@`-prefixed version appendices for the node names. When you save a version, an `@`-symbol will be added to node name (if it not already exists) and the saved version is appended to the name.
-
-This feature also adds two more version options "From Appendix" and "To Appendix" to the user interface (if the version appendix and the internal version of that node differ) allowing you to f.e. manually set or remove the version. Please keep in mind that `0.x` versions are not supported by this plugin.
-
-Unchecking this option does currently not remove any version appendices. If you want to remove any version appendices from your nodes you will have to do this manually at the moment.
+Plaese see the Figma page of the plugin for further information
 
 ## API
 
@@ -108,9 +43,21 @@ The version is stored as SemVer-compatible string matching the following regular
 /\d+\.\d+\.\d+(-rfc\.\d+)?/i
 ```
 
+### sharedPluginData: history
+
+- Type: `array` – Array with history objects
+
+#### HistoryObject
+
+- version: `string | undefined`
+- commitMessage: `string | undefined`
+
+The history stack up to 5 version changes saving the version alongside the optional commit message.
+The first history element (index `0`) might miss a `version` property, this happens when a user drafted a commit message but did not save it away.
+
 #### Example
 
-This example shows how to extract the stored version information from a nopde programatically 
+This example shows how to extract the stored version information from a nopde programatically
 
 Access the stored property using the [`GET file nodes`][rest-api-files-endpoint]:
 
@@ -131,7 +78,13 @@ Results in:
         "name": "Frame 1@2.0.0-rfc.1",
         "sharedPluginData": {
           "com.github.florianb.figma_semantic_versioning": {
-            "version": "2.0.0-rfc.1"
+            "version": "2.0.0-rfc.1",
+            "history": [
+              {
+                "commitMessage":"Add color",
+                "version":"1.1.0"
+              }
+            ]
           }
         }
         ...
