@@ -1,4 +1,5 @@
 <script>
+	import { debounce } from "lodash";
 	import { onMount } from "svelte";
 	import Settings from "./Settings.svelte";
 	import NodeList from "./NodeList.svelte";
@@ -13,6 +14,21 @@
 	onMount(() => {
 		parent.postMessage({ pluginMessage: { type: "settings" } }, "*");
 	});
+
+	const resizeUi = debounce((node) => {
+		if (node) {
+			parent.postMessage(
+				{
+					pluginMessage: {
+						type: "resize",
+						width: node.offsetWidth,
+						height: node.offsetHeight,
+					},
+				},
+				"*"
+			);
+		}
+	}, 66);
 
 	window.onmessage = (event) => {
 		const message = event.data.pluginMessage;
@@ -39,7 +55,7 @@
 	};
 </script>
 
-<div class="body">
+<div class="body" use:resizeUi>
 	{#if type === "list"}
 		<NodeList nodes={data} />
 	{:else if type === "actions"}
@@ -67,5 +83,6 @@
 		font-size: 12px;
 		font-weight: 400;
 		font-stretch: 100%;
+		padding: 1ex 1em;
 	}
 </style>

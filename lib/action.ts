@@ -25,6 +25,29 @@ export interface ActionObject {
 }
 
 export default class Action {
+	public static readonly orderedActions = [
+		'keep',
+		'initial',
+		'rfc',
+		'release',
+		'patch',
+		'minor',
+		'major',
+		'revert',
+		'toName',
+		'fromName',
+	];
+
+	public static getIndex(label: string): number {
+		const index = Action.orderedActions.indexOf(label);
+
+		if (index === -1) {
+			throw new ReferenceError(`No index for unknown laben "${label}".`);
+		}
+
+		return index;
+	}
+
 	version: Version;
 	nodeId?: string;
 	label: string;

@@ -67,6 +67,8 @@ function deriveActions(node: BaseNode, settings: SettingsObject, version?: Versi
 		});
 	}
 
+	actions.sort((a, b) => Action.getIndex(a.label) - Action.getIndex(b.label));
+
 	return actions;
 }
 
@@ -117,6 +119,10 @@ function updateCommitMessage(message: any): void {
 	}
 
 	Plugin.setHistory(node, history);
+}
+
+function resizeUi(_width = 300, height = 600) {
+	figma.ui.resize(300, height);
 }
 
 function updateVersion(message: any): void {
@@ -187,6 +193,7 @@ figma.on('close', () => {
 
 // eslint-disable-next-line unicorn/prefer-add-event-listener
 figma.ui.onmessage = message => {
+	console.log(message);
 	switch (message.type) {
 		case 'settings': {
 			const settings: SettingsObject = {
@@ -218,6 +225,11 @@ figma.ui.onmessage = message => {
 
 		case 'updateCommitMessage': {
 			updateCommitMessage(message);
+			break;
+		}
+
+		case 'resize': {
+			resizeUi(message.width, message.height);
 			break;
 		}
 
