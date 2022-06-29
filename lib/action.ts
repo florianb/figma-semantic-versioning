@@ -53,8 +53,8 @@ export default class Action {
 	label: string;
 
 	constructor(action: Action | string);
-	constructor(node: BaseNode, version: Version | null, label: string);
-	constructor(actionOrNode: Action | string | BaseNode, version?: Version | null, label?: string) {
+	constructor(node: BaseNode, version: Version | undefined, label: string);
+	constructor(actionOrNode: Action | string | BaseNode, version?: Version | undefined, label?: string) {
 		if (isAction(actionOrNode)) {
 			this.version = actionOrNode.version;
 			this.nodeId = actionOrNode.nodeId;

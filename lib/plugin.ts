@@ -11,7 +11,7 @@ export default abstract class Plugin {
 	public static namespace = 'com.github.florianb.figma_semantic_versioning';
 
 	// Get config value
-	public static getConfig(key: string): any | undefined {
+	public static getConfig(key: string): any {
 		const value = figma.currentPage.getSharedPluginData(this.namespace, key);
 
 		return Plugin.unpackValue(value);
@@ -23,7 +23,7 @@ export default abstract class Plugin {
 	}
 
 	// Get node value
-	public static getNode(node: BaseNode, key: string): any | undefined {
+	public static getNode(node: BaseNode, key: string): any {
 		const value = node.getSharedPluginData(this.namespace, key);
 
 		return Plugin.unpackValue(value);
