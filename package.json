@@ -4,7 +4,7 @@
   "description": "Simplified Semver-based versioning for your Figma Design Nodes",
   "main": "dist/code.js",
   "scripts": {
-    "watch": "watchexec -i dist 'npm run lint && npm run build'",
+    "watch": "watchexec -i dist \"npm run lint && npm run build\"",
     "lint": "tsc -noEmit -p tsconfig.json && xo **/*.ts",
     "build": "node build.js"
   },

@@ -16,13 +16,13 @@ function isAction(object: any): object is Action {
 	return true;
 }
 
-export interface ActionObject {
+export type ActionObject = {
 	version: string;
 	nodeId?: string;
 	label: string;
 	nameVersion?: string;
 	commitMessage?: string;
-}
+};
 
 export default class Action {
 	public static readonly orderedActions = [

@@ -2,10 +2,10 @@
 
 import Version from './version.js';
 
-interface HistoryObject {
+type HistoryObject = {
 	version?: Version;
 	commitMessage?: string;
-}
+};
 
 export default abstract class Plugin {
 	public static namespace = 'com.github.florianb.figma_semantic_versioning';

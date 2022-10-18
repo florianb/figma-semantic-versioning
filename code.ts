@@ -1,19 +1,26 @@
-import Action, {ActionObject} from './lib/action.js';
+import type {ActionObject} from './lib/action.js';
+import Action from './lib/action.js';
 import Version from './lib/version.js';
 import Plugin from './lib/plugin.js';
 
 // @ts-expect-error: TS2307
 import ui from './ui.html';
 
-interface SettingsObject {
+type SettingsObject = {
 	useRfc?: boolean;
 	updateName?: boolean;
 	useCommitMessage?: boolean;
 	saveToFigmaVersionHistory?: boolean;
-}
+};
 
 const versionRegex = /@(\d+\.\d+\.\d+(-rfc\.\d+)?)$/im;
 
+/**
+ * Derives possible Actions based on current version
+ *
+ * Returns an array ob possible actions, based on the given version and
+ * the current settings.
+ */
 function deriveActions(node: BaseNode, settings: SettingsObject, version?: Version): ActionObject[] {
 	const versionFromName = getVersionFromName(node);
 	const actions: ActionObject[] = [{

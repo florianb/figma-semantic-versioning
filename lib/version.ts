@@ -1,11 +1,11 @@
 /* eslint @typescript-eslint/no-unnecessary-type-assertion: "off" */
 
-export interface VersionObject {
+export type VersionObject = {
 	major: number;
 	minor: number;
 	patch: number;
 	rfc?: number;
-}
+};
 
 function isVersion(object: any): object is Version {
 	return object instanceof Version;
