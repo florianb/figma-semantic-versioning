@@ -1,38 +1,48 @@
+import {env} from 'node:process';
+import {format, parse} from 'node:path';
+import {promises} from 'node:fs';
+
+import esbuildSvelte from 'esbuild-svelte';
+import sveltePreprocess from 'svelte-preprocess';
+
+import esbuild from 'esbuild';
+
 const inlineStylePlugin = {
 	name: 'inlineStyle',
 	setup(build) {
-		const fs = require('fs');
-		const path = require('path');
 		const options = build.initialOptions;
 
 		build.onLoad({filter: /\.html$/}, async args => {
 			const styleTagRegex = /<\/style>/gi;
 			const headTagRegex = /<\/head>/gi;
 			const bodyTagRegex = /<\/body>/gi;
-			const htmlPathObject = path.parse(args.path);
-			const cssPath = path.format(Object.assign({},
+			const htmlPathObject = parse(args.path);
+			const cssPath = format(Object.assign({},
 				htmlPathObject,
 				{ext: '.css', base: undefined},
 			));
-			const jsPath = path.format(Object.assign({},
+			const jsPath = format(Object.assign({},
 				htmlPathObject,
 				{ext: '.js', base: undefined},
 			));
-			const htmlSource = (await fs.promises.readFile(args.path)).toString();
+			let fileContents = await promises.readFile(args.path);
+			const htmlSource = fileContents.toString();
 			let jsSource = '';
 			let cssSource = '';
 
 			try {
 				try {
-					cssSource = (await fs.promises.readFile(cssPath)).toString();
+					fileContents = await promises.readFile(cssPath);
+					cssSource = fileContents.toString();
 				} catch {
-					const fallbackCssPath = path.format({
+					const fallbackCssPath = format({
 						dir: options.outdir,
 						name: htmlPathObject.name,
 						ext: '.css',
 					});
 
-					cssSource = (await fs.promises.readFile(fallbackCssPath)).toString();
+					fileContents = await promises.readFile(fallbackCssPath);
+					cssSource = fileContents.toString();
 				}
 
 				let newHtmlSource = htmlSource.replace(
@@ -43,21 +53,23 @@ const inlineStylePlugin = {
 				if (htmlSource.length === newHtmlSource.length) {
 					newHtmlSource = htmlSource.replace(
 						headTagRegex,
-						`<style>\n${cssSource}\n</style>\n</head>`
+						`<style>\n${cssSource}\n</style>\n</head>`,
 					);
 				}
 
 				try {
-					jsSource = (await fs.promises.readFile(jsPath)).toString();
-				} catch (error) {
-					const fallbackJsPath = path.format({
+					fileContents = await promises.readFile(jsPath);
+					jsSource = fileContents.toString();
+				} catch (error) { // eslint-disable-line no-unused-vars, unicorn/prefer-optional-catch-binding
+					const fallbackJsPath = format({
 						dir: options.outdir,
 						name: htmlPathObject.name,
 						ext: '.js',
 					});
 
 					try {
-						jsSource = (await fs.promises.readFile(fallbackJsPath)).toString();
+						fileContents = await promises.readFile(fallbackJsPath);
+						jsSource = fileContents.toString();
 					} catch {}
 				}
 
@@ -68,16 +80,13 @@ const inlineStylePlugin = {
 					);
 				}
 
-				return {contents: newHtmlSource, loader: 'text'}
+				return {contents: newHtmlSource, loader: 'text'};
 			} catch {}
 		});
 	},
 };
 
-const esbuildSvelte = require('esbuild-svelte');
-const sveltePreprocess = require('svelte-preprocess');
-
-require('esbuild')
+esbuild
 	.build({
 		logLevel: 'info',
 		entryPoints: ['lib/ui.js'],
@@ -89,11 +98,13 @@ require('esbuild')
 				preprocess: sveltePreprocess,
 			}),
 		],
-		minify: true,
+		minify: env.NODE_ENV !== 'dev',
 	})
-	.catch(() => process.exit(1));
+	.catch(() => {
+		throw new Error('Building ui.js failed');
+	});
 
-require('esbuild')
+esbuild
 	.build({
 		logLevel: 'info',
 		entryPoints: ['code.ts'],
@@ -106,7 +117,9 @@ require('esbuild')
 		plugins: [
 			inlineStylePlugin,
 		],
-		minify: true,
+		minify: env.NODE_ENV !== 'dev',
 	})
-	.catch(() => process.exit(1));
+	.catch(() => {
+		throw new Error('Building code.js failed');
+	});
 
