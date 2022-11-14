@@ -4,9 +4,9 @@
   "description": "Simplified Semver-based versioning for your Figma Design Nodes",
   "main": "dist/code.js",
   "scripts": {
-    "watch": "NODE_ENV=dev watchexec -i dist \"npm run lint && npm run build\"",
+    "watch": "cross-env NODE_ENV=dev watchexec -i \"**/dist/**\" \"npm run lint && npm run build\"",
     "lint": "tsc -noEmit -p tsconfig.json && xo **/*.ts",
-    "build": "node build.js"
+    "build": "cross-env NODE_ENV=dev node build.mjs"
   },
   "author": "florian.neumann@mindkeeper.solutions",
   "license": "MIT",
@@ -16,6 +16,7 @@
     "@types/lodash": "^4.14.188",
     "autoprefixer": "^10.4.13",
     "ava": "^4",
+    "cross-env": "^7.0.3",
     "esbuild": "^0.15",
     "esbuild-plugin-postcss2": "^0.1.2",
     "esbuild-svelte": "^0.7.1",

@@ -249,11 +249,10 @@ figma.ui.onmessage = message => {
 function updateUi(hasSelectionChanged = false) {
 	const page = figma.currentPage;
 	const selection = page.selection;
+	let message = null;
+	const uiOptions: ShowUIOptions = {};
 
 	if (selection.length > 0) {
-		let message = null;
-		const uiOptions: ShowUIOptions = {};
-
 		if (selection.length === 1) {
 			const settings = (Plugin.getConfig('settings') || {}) as SettingsObject;
 			const node = selection[0] as BaseNode;
@@ -288,9 +287,29 @@ function updateUi(hasSelectionChanged = false) {
 		figma.showUI(ui, uiOptions);
 		figma.ui.postMessage(message);
 	} else {
-		const closeMessage = hasSelectionChanged ? undefined : 'Semantic Versioning requires selected Nodes.';
+		figma.skipInvisibleInstanceChildren = true;
+		const versionedNodes
+			= figma.root
+				.findAll(node => versionRegex.test(node.name)
+					|| Plugin.getVersion(node) !== undefined)
+				.map(node => {
+					const version = Plugin.getVersion(node) || null;
 
-		figma.closePlugin(closeMessage);
+					return {
+						id: node.id,
+						name: node.name,
+						version,
+					};
+				});
+
+		figma.skipInvisibleInstanceChildren = false;
+
+		message = {
+			type: 'list',
+			data: versionedNodes,
+		};
+
+		figma.ui.postMessage(message);
 	}
 }
 

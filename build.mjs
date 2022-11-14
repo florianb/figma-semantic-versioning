@@ -99,6 +99,7 @@ esbuild
 			}),
 		],
 		minify: env.NODE_ENV !== 'dev',
+		sourcemap: env.NODE_ENV === 'dev',
 	})
 	.catch(() => {
 		throw new Error('Building ui.js failed');
@@ -118,6 +119,7 @@ esbuild
 			inlineStylePlugin,
 		],
 		minify: env.NODE_ENV !== 'dev',
+		sourcemap: env.NODE_ENV === 'dev',
 	})
 	.catch(() => {
 		throw new Error('Building code.js failed');
