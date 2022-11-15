@@ -283,9 +283,6 @@ function updateUi(hasSelectionChanged = false) {
 				data: selectedNodes,
 			};
 		}
-
-		figma.showUI(ui, uiOptions);
-		figma.ui.postMessage(message);
 	} else {
 		figma.skipInvisibleInstanceChildren = true;
 		const versionedNodes
@@ -308,9 +305,10 @@ function updateUi(hasSelectionChanged = false) {
 			type: 'list',
 			data: versionedNodes,
 		};
-
-		figma.ui.postMessage(message);
 	}
+
+	figma.showUI(ui, uiOptions);
+	figma.ui.postMessage(message);
 }
 
 if (figma.editorType === 'figma') {

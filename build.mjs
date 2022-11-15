@@ -86,31 +86,32 @@ const inlineStylePlugin = {
 	},
 };
 
+const defaults = {
+	target: ['es6'],
+	logLevel: 'info',
+	bundle: true,
+	outdir: 'dist/',
+	minify: env.NODE_ENV !== 'dev',
+	sourcemap: env.NODE_ENV === 'dev',
+};
+
 esbuild
-	.build({
-		logLevel: 'info',
+	.build(Object.assign({}, defaults, {
 		entryPoints: ['lib/ui.js'],
-		bundle: true,
-		outdir: 'dist/',
 		platform: 'browser',
 		plugins: [
 			esbuildSvelte({
 				preprocess: sveltePreprocess,
 			}),
 		],
-		minify: env.NODE_ENV !== 'dev',
-		sourcemap: env.NODE_ENV === 'dev',
-	})
+	}))
 	.catch(() => {
 		throw new Error('Building ui.js failed');
 	});
 
 esbuild
-	.build({
-		logLevel: 'info',
+	.build(Object.assign({}, defaults, {
 		entryPoints: ['code.ts'],
-		bundle: true,
-		outdir: 'dist/',
 		platform: 'neutral',
 		loader: {
 			'.html': 'text',
@@ -118,9 +119,7 @@ esbuild
 		plugins: [
 			inlineStylePlugin,
 		],
-		minify: env.NODE_ENV !== 'dev',
-		sourcemap: env.NODE_ENV === 'dev',
-	})
+	}))
 	.catch(() => {
 		throw new Error('Building code.js failed');
 	});
