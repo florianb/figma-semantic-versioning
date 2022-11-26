@@ -102,6 +102,11 @@ esbuild
 		plugins: [
 			esbuildSvelte({
 				preprocess: sveltePreprocess,
+				compilerOptions: {
+					preserveComments: false,
+					preserveWhitespace: false,
+					dev: env.NODE_ENV === 'dev',
+				},
 			}),
 		],
 	}))
