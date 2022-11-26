@@ -1,246 +1,4 @@
-var __defProp = Object.defineProperty;
-var __getOwnPropSymbols = Object.getOwnPropertySymbols;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __propIsEnum = Object.prototype.propertyIsEnumerable;
-var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __spreadValues = (a, b) => {
-  for (var prop in b ||= {})
-    if (__hasOwnProp.call(b, prop))
-      __defNormalProp(a, prop, b[prop]);
-  if (__getOwnPropSymbols)
-    for (var prop of __getOwnPropSymbols(b)) {
-      if (__propIsEnum.call(b, prop))
-        __defNormalProp(a, prop, b[prop]);
-    }
-  return a;
-};
-
-// lib/version.js
-var __rest = function(s, e) {
-  const t = {};
-  for (var p in s) {
-    if (Object.prototype.hasOwnProperty.call(s, p) && !e.includes(p)) {
-      t[p] = s[p];
-    }
-  }
-  if (s != null && typeof Object.getOwnPropertySymbols === "function") {
-    for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-      if (!e.includes(p[i]) && Object.prototype.propertyIsEnumerable.call(s, p[i])) {
-        t[p[i]] = s[p[i]];
-      }
-    }
-  }
-  return t;
-};
-function isVersion(object) {
-  return object instanceof Version;
-}
-var Version = class {
-  constructor(version, useRfc) {
-    let newVersion;
-    if (typeof version === "string") {
-      const [major, minor, patch, rfc] = version.split(/\.|-rfc\./).map((level) => level ? Number.parseInt(level, 10) : void 0);
-      newVersion = {
-        major,
-        minor,
-        patch,
-        rfc
-      };
-    } else if (isVersion(version)) {
-      newVersion = version.toObject();
-    } else if (typeof version === "object") {
-      newVersion = version;
-    } else {
-      newVersion = {
-        major: 1,
-        minor: 0,
-        patch: 0,
-        rfc: useRfc ? 1 : void 0
-      };
-    }
-    this.major = newVersion.major;
-    this.minor = newVersion.minor;
-    this.patch = newVersion.patch;
-    this.rfc = newVersion.rfc;
-  }
-  toString() {
-    const appendix = this.rfc === void 0 ? "" : `-rfc.${this.rfc}`;
-    return `${this.major}.${this.minor}.${this.patch}${appendix}`;
-  }
-  toObject() {
-    const newObject = __rest(this, []);
-    return newObject;
-  }
-  deriveOptions(useRfc) {
-    const newRfc = useRfc ? 1 : void 0;
-    const baseVersion = this.toObject();
-    const options = [
-      {
-        major: baseVersion.major + 1,
-        minor: 0,
-        patch: 0,
-        rfc: newRfc
-      },
-      Object.assign(Object.assign({}, baseVersion), { minor: baseVersion.minor + 1, patch: 0, rfc: newRfc }),
-      Object.assign(Object.assign({}, baseVersion), { patch: baseVersion.patch + 1, rfc: newRfc })
-    ];
-    if (useRfc && baseVersion.rfc) {
-      options.push(Object.assign(Object.assign({}, baseVersion), { rfc: baseVersion.rfc + 1 }));
-    }
-    if (baseVersion.rfc) {
-      options.push(Object.assign(Object.assign({}, baseVersion), { rfc: void 0 }));
-    }
-    return options;
-  }
-  elevatedLevel(otherVersion) {
-    for (const level of Version.levels) {
-      if (level === "rfc" && !otherVersion[level] && this[level]) {
-        return "release";
-      }
-      if (this[level] !== otherVersion[level]) {
-        return level;
-      }
-    }
-    return void 0;
-  }
-  equals(otherVersion) {
-    return this.major === otherVersion.major && this.minor === otherVersion.minor && this.patch === otherVersion.patch && this.rfc === otherVersion.rfc;
-  }
-};
-Version.levels = ["major", "minor", "patch", "rfc"];
-Version.pattern = /\d+\.\d+\.\d+(-rfc\.\d+)?$/im;
-
-// lib/action.js
-function isAction(object) {
-  const properties = ["version", "nodeId", "label"];
-  if (object === void 0) {
-    return false;
-  }
-  for (const prop of properties) {
-    if (!(prop in object)) {
-      return false;
-    }
-  }
-  return true;
-}
-var Action = class {
-  constructor(actionOrNode, version, label) {
-    if (isAction(actionOrNode)) {
-      this.version = actionOrNode.version;
-      this.nodeId = actionOrNode.nodeId;
-      this.label = actionOrNode.label;
-    } else if (typeof actionOrNode === "string") {
-      const action = JSON.parse(actionOrNode);
-      this.version = action.version ? null : new Version(action.version);
-      this.nodeId = action.nodeId;
-      this.label = action.label;
-    } else {
-      this.version = version;
-      this.nodeId = actionOrNode.id;
-      this.label = label;
-    }
-  }
-  static getIndex(label) {
-    const index = Action.orderedActions.indexOf(label);
-    if (index === -1) {
-      throw new ReferenceError(`No index for unknown laben "${label}".`);
-    }
-    return index;
-  }
-  toString() {
-    return JSON.stringify(this.toObject());
-  }
-  toObject() {
-    return {
-      version: this.version.toString(),
-      nodeId: this.nodeId,
-      label: this.label
-    };
-  }
-};
-Action.orderedActions = [
-  "keep",
-  "initial",
-  "rfc",
-  "release",
-  "patch",
-  "minor",
-  "major",
-  "revert",
-  "toName",
-  "fromName"
-];
-
-// lib/plugin.js
-var Plugin = class {
-  static getConfig(key) {
-    const value = figma.currentPage.getSharedPluginData(this.namespace, key);
-    return Plugin.unpackValue(value);
-  }
-  static setConfig(key, value) {
-    figma.currentPage.setSharedPluginData(this.namespace, key, Plugin.packValue(value));
-  }
-  static getNode(node, key) {
-    const value = node.getSharedPluginData(this.namespace, key);
-    return Plugin.unpackValue(value);
-  }
-  static setNode(node, key, value) {
-    node.setSharedPluginData(this.namespace, key, Plugin.packValue(value));
-  }
-  static getVersion(node) {
-    const versionString = Plugin.getNode(node, "version");
-    return versionString ? new Version(versionString) : void 0;
-  }
-  static setVersion(node, version) {
-    const newVersion = version instanceof Version ? new Version(version).toString() : version;
-    Plugin.setNode(node, "version", newVersion);
-  }
-  static getHistory(node) {
-    const history = Plugin.getNode(node, "history");
-    if (history) {
-      return history.map((h) => ({
-        version: h.version ? new Version(h.version) : void 0,
-        commitMessage: h.commitMessage ? h.commitMessage : void 0
-      }));
-    }
-    return void 0;
-  }
-  static setHistory(node, history) {
-    if (history) {
-      history = history.slice(0, 5);
-    }
-    const stringifiedHistory = history.map((h) => {
-      let _a;
-      return {
-        version: (_a = h === null || h === void 0 ? void 0 : h.version) === null || _a === void 0 ? void 0 : _a.toString(),
-        commitMessage: h === null || h === void 0 ? void 0 : h.commitMessage
-      };
-    });
-    console.log(stringifiedHistory, history);
-    Plugin.setNode(node, "history", stringifiedHistory);
-  }
-  static packValue(value) {
-    switch (typeof value) {
-      case "string":
-        return value;
-      case "undefined":
-        return "";
-      default:
-        return JSON.stringify(value);
-    }
-  }
-  static unpackValue(value) {
-    try {
-      return JSON.parse(value);
-    } catch (e) {
-      return value === "" ? void 0 : value;
-    }
-  }
-};
-Plugin.namespace = "com.github.florianb.figma_semantic_versioning";
-
-// ui.html
-var ui_default = `<!DOCTYPE html>\r
+var A=Object.defineProperty;var y=Object.getOwnPropertySymbols;var j=Object.prototype.hasOwnProperty,I=Object.prototype.propertyIsEnumerable;var v=(a,e,t)=>e in a?A(a,e,{enumerable:!0,configurable:!0,writable:!0,value:t}):a[e]=t,g=(a,e)=>{for(var t in e||(e={}))j.call(e,t)&&v(a,t,e[t]);if(y)for(var t of y(e))I.call(e,t)&&v(a,t,e[t]);return a};var w=function(a,e){let t={};for(var r in a)Object.prototype.hasOwnProperty.call(a,r)&&!e.includes(r)&&(t[r]=a[r]);if(a!=null&&typeof Object.getOwnPropertySymbols=="function")for(var n=0,r=Object.getOwnPropertySymbols(a);n<r.length;n++)!e.includes(r[n])&&Object.prototype.propertyIsEnumerable.call(a,r[n])&&(t[r[n]]=a[r[n]]);return t};function R(a){return a instanceof l}var l=class{constructor(e,t){let r;if(typeof e=="string"){let[n,c,s,o]=e.split(/\.|-rfc\./).map(u=>u?Number.parseInt(u,10):void 0);r={major:n,minor:c,patch:s,rfc:o}}else R(e)?r=e.toObject():typeof e=="object"?r=e:r={major:1,minor:0,patch:0,rfc:t?1:void 0};this.major=r.major,this.minor=r.minor,this.patch=r.patch,this.rfc=r.rfc}toString(){let e=this.rfc===void 0?"":`-rfc.${this.rfc}`;return`${this.major}.${this.minor}.${this.patch}${e}`}toObject(){return w(this,[])}deriveOptions(e){let t=e?1:void 0,r=this.toObject(),n=[{major:r.major+1,minor:0,patch:0,rfc:t},Object.assign(Object.assign({},r),{minor:r.minor+1,patch:0,rfc:t}),Object.assign(Object.assign({},r),{patch:r.patch+1,rfc:t})];return e&&r.rfc&&n.push(Object.assign(Object.assign({},r),{rfc:r.rfc+1})),r.rfc&&n.push(Object.assign(Object.assign({},r),{rfc:void 0})),n}elevatedLevel(e){for(let t of l.levels){if(t==="rfc"&&!e[t]&&this[t])return"release";if(this[t]!==e[t])return t}}equals(e){return this.major===e.major&&this.minor===e.minor&&this.patch===e.patch&&this.rfc===e.rfc}};l.levels=["major","minor","patch","rfc"];l.pattern=/\d+\.\d+\.\d+(-rfc\.\d+)?$/im;function T(a){let e=["version","nodeId","label"];if(a===void 0)return!1;for(let t of e)if(!(t in a))return!1;return!0}var d=class{constructor(e,t,r){if(T(e))this.version=e.version,this.nodeId=e.nodeId,this.label=e.label;else if(typeof e=="string"){let n=JSON.parse(e);this.version=n.version?null:new l(n.version),this.nodeId=n.nodeId,this.label=n.label}else this.version=t,this.nodeId=e.id,this.label=r}static getIndex(e){let t=d.orderedActions.indexOf(e);if(t===-1)throw new ReferenceError(`No index for unknown laben "${e}".`);return t}toString(){return JSON.stringify(this.toObject())}toObject(){return{version:this.version.toString(),nodeId:this.nodeId,label:this.label}}};d.orderedActions=["keep","initial","rfc","release","patch","minor","major","revert","toName","fromName"];var i=class{static getConfig(e){let t=figma.currentPage.getSharedPluginData(this.namespace,e);return i.unpackValue(t)}static setConfig(e,t){figma.currentPage.setSharedPluginData(this.namespace,e,i.packValue(t))}static getNode(e,t){let r=e.getSharedPluginData(this.namespace,t);return i.unpackValue(r)}static setNode(e,t,r){e.setSharedPluginData(this.namespace,t,i.packValue(r))}static getVersion(e){let t=i.getNode(e,"version");return t?new l(t):void 0}static setVersion(e,t){let r=t instanceof l?new l(t).toString():t;i.setNode(e,"version",r)}static getHistory(e){let t=i.getNode(e,"history");if(t)return t.map(r=>({version:r.version?new l(r.version):void 0,commitMessage:r.commitMessage?r.commitMessage:void 0}))}static setHistory(e,t){t&&(t=t.slice(0,5));let r=t.map(n=>{let c;return{version:(c=n==null?void 0:n.version)===null||c===void 0?void 0:c.toString(),commitMessage:n==null?void 0:n.commitMessage}});i.setNode(e,"history",r)}static packValue(e){switch(typeof e){case"string":return e;case"undefined":return"";default:return JSON.stringify(e)}}static unpackValue(e){try{return JSON.parse(e)}catch(t){return e===""?void 0:e}}};i.namespace="com.github.florianb.figma_semantic_versioning";var m=`<!DOCTYPE html>\r
 <html lang="en">\r
 	<head>\r
 		<meta charset="utf-8">\r
@@ -274,24 +32,38 @@ details.svelte-rklo3x div label.svelte-rklo3x {
 }
 
 /* fakecss:C:/Users/FlorianNeumann/GitHub/figma-semantic-versioning/lib/NodeList.esbuild-svelte-fake-css */
-table.svelte-15gjnjl.svelte-15gjnjl.svelte-15gjnjl {
-  font-size: 11px;
+table.svelte-u516mr.svelte-u516mr.svelte-u516mr {
+  border-collapse: collapse;
+  border: none !important;
+  font-size: 12px;
   font-weight: 400;
   text-align: left;
-  table-layout: fixed;
-  width: 100%;
+  table-layout: auto;
+  width: 95%;
 }
-th.svelte-15gjnjl.svelte-15gjnjl.svelte-15gjnjl {
+th.svelte-u516mr.svelte-u516mr.svelte-u516mr {
   font-size: 10px;
   font-weight: 600;
   color: #333;
+  margin: 0;
   margin-bottom: 2px;
 }
-table.svelte-15gjnjl > tr.svelte-15gjnjl > th.svelte-15gjnjl {
+table.svelte-u516mr > tr.svelte-u516mr > th.svelte-u516mr {
   width: 70%;
 }
-.version.svelte-15gjnjl.svelte-15gjnjl.svelte-15gjnjl {
+.version.svelte-u516mr.svelte-u516mr.svelte-u516mr {
   font-variant-numeric: tabular-nums lining-nums;
+}
+td.svelte-u516mr.svelte-u516mr.svelte-u516mr {
+  padding: 1ex 0.4ex 0.8ex 0.4ex;
+  margin: 0;
+  margin-bottom: 0.2ex;
+  color: #444;
+}
+tr.svelte-u516mr.svelte-u516mr.svelte-u516mr:hover {
+  color: #000;
+  background-color: #daebf7;
+  cursor: pointer;
 }
 
 /* fakecss:C:/Users/FlorianNeumann/GitHub/figma-semantic-versioning/lib/ActionList.esbuild-svelte-fake-css */
@@ -6593,6 +6365,8 @@ label.svelte-17kdrls.svelte-17kdrls {
     let t2_value = (ctx[1].version || "not versioned") + "";
     let t2;
     let t3;
+    let mounted;
+    let dispose;
     return {
       c() {
         tr = element("tr");
@@ -6602,7 +6376,9 @@ label.svelte-17kdrls.svelte-17kdrls {
         td1 = element("td");
         t2 = text(t2_value);
         t3 = space();
-        attr(td1, "class", "version svelte-15gjnjl");
+        attr(td0, "class", "svelte-u516mr");
+        attr(td1, "class", "version svelte-u516mr");
+        attr(tr, "class", "svelte-u516mr");
       },
       m(target, anchor) {
         insert(target, tr, anchor);
@@ -6612,16 +6388,26 @@ label.svelte-17kdrls.svelte-17kdrls {
         append(tr, td1);
         append(td1, t2);
         append(tr, t3);
+        if (!mounted) {
+          dispose = listen(tr, "click", function() {
+            if (is_function(select(ctx[1].id)))
+              select(ctx[1].id).apply(this, arguments);
+          });
+          mounted = true;
+        }
       },
-      p(ctx2, dirty) {
-        if (dirty & 1 && t0_value !== (t0_value = ctx2[1].name + ""))
+      p(new_ctx, dirty) {
+        ctx = new_ctx;
+        if (dirty & 1 && t0_value !== (t0_value = ctx[1].name + ""))
           set_data(t0, t0_value);
-        if (dirty & 1 && t2_value !== (t2_value = (ctx2[1].version || "not versioned") + ""))
+        if (dirty & 1 && t2_value !== (t2_value = (ctx[1].version || "not versioned") + ""))
           set_data(t2, t2_value);
       },
       d(detaching) {
         if (detaching)
           detach(tr);
+        mounted = false;
+        dispose();
       }
     };
   }
@@ -6638,14 +6424,14 @@ label.svelte-17kdrls.svelte-17kdrls {
       c() {
         table = element("table");
         tr = element("tr");
-        tr.innerHTML = \`<th class="svelte-15gjnjl">Name</th> 
-		<th class="svelte-15gjnjl">Version</th>\`;
+        tr.innerHTML = \`<th class="svelte-u516mr">Name</th> 
+		<th class="svelte-u516mr">Version</th>\`;
         t3 = space();
         for (let i = 0; i < each_blocks.length; i += 1) {
           each_blocks[i].c();
         }
-        attr(tr, "class", "svelte-15gjnjl");
-        attr(table, "class", "svelte-15gjnjl");
+        attr(tr, "class", "svelte-u516mr");
+        attr(table, "class", "svelte-u516mr");
       },
       m(target, anchor) {
         insert(target, table, anchor);
@@ -6683,6 +6469,14 @@ label.svelte-17kdrls.svelte-17kdrls {
         destroy_each(each_blocks, detaching);
       }
     };
+  }
+  function select(nodeId) {
+    parent.postMessage(
+      {
+        pluginMessage: { type: "select", nodeId }
+      },
+      "*"
+    );
   }
   function instance2($self, $props, $invalidate) {
     let { nodes = [] } = $props;
@@ -7590,240 +7384,4 @@ label.svelte-17kdrls.svelte-17kdrls {
 </body>\r
 </html>\r
 \r
-`;
-
-// code.ts
-var versionRegex = /@(\d+\.\d+\.\d+(-rfc\.\d+)?)$/im;
-function deriveActions(node, settings, version) {
-  const versionFromName = getVersionFromName(node);
-  const actions = [{
-    version: version ? version.toString() : null,
-    label: "keep"
-  }];
-  if (version) {
-    const options = version.deriveOptions(settings.useRfc).map((versionObject) => {
-      const newVersion = new Version(versionObject);
-      const label = version.elevatedLevel(newVersion) || "keep";
-      const action = new Action(node, newVersion, label);
-      return action.toObject();
-    });
-    actions.push(...options);
-  } else {
-    const initialVersion = new Version(void 0, settings.useRfc);
-    const action = new Action(node, initialVersion, "initial");
-    actions.push(action.toObject());
-  }
-  const hasOneVersionUndefined = !versionFromName !== !version;
-  const hasDifferentVersion = Boolean(versionFromName) && Boolean(version) && !version.equals(versionFromName);
-  if (settings.updateName && (hasOneVersionUndefined || hasDifferentVersion)) {
-    actions.push({
-      nodeId: node.id,
-      version: versionFromName ? versionFromName.toString() : void 0,
-      label: "fromName"
-    }, {
-      nodeId: node.id,
-      label: "toName",
-      version: version ? version.toString() : void 0,
-      nameVersion: versionFromName ? versionFromName.toString() : void 0
-    });
-  }
-  const history = Plugin.getHistory(node) || [];
-  if (history.length > 1) {
-    actions.push({
-      nodeId: node.id,
-      version: history[1].version.toString(),
-      commitMessage: history[1].commitMessage,
-      label: "revert"
-    });
-  }
-  actions.sort((a, b) => Action.getIndex(a.label) - Action.getIndex(b.label));
-  return actions;
-}
-function getVersionFromName(node) {
-  const name = node.name;
-  const match = versionRegex.exec(name);
-  if (match) {
-    return new Version(match[1]);
-  }
-  return void 0;
-}
-function updateVersionInName(node, version) {
-  const name = node.name;
-  const hasVersionInName = getVersionFromName(node) !== void 0;
-  if (version === void 0 || version === "") {
-    node.name = name.replace(versionRegex, "");
-  } else {
-    const newVersionString = `@${version.toString()}`;
-    node.name = hasVersionInName ? name.replace(versionRegex, newVersionString) : `${name}${newVersionString}`;
-  }
-}
-function updateSettings(message) {
-  const oldSettings = Plugin.getConfig("settings") || {};
-  const newSettings = __spreadValues(__spreadValues({}, oldSettings), message.settings);
-  Plugin.setConfig("settings", newSettings);
-}
-function updateCommitMessage(message) {
-  const node = figma.getNodeById(message.nodeId);
-  const commitMessage = message.commitMessage;
-  const history = Plugin.getHistory(node) || [];
-  if (history.length > 0 && !history[0].version) {
-    history[0].commitMessage = commitMessage;
-  } else {
-    history.unshift({
-      commitMessage
-    });
-  }
-  Plugin.setHistory(node, history);
-}
-function resizeUi(_width = 300, height = 600) {
-  figma.ui.resize(300, height);
-}
-function updateVersion(message) {
-  const action = message.action;
-  const node = figma.getNodeById(action.nodeId);
-  const { updateName, useCommitMessage, saveToFigmaVersionHistory } = Plugin.getConfig("settings") || {};
-  const version = action.version ? new Version(action.version) : "";
-  Plugin.setVersion(node, version);
-  if (updateName) {
-    updateVersionInName(node, version);
-  }
-  if (version !== "") {
-    const history = Plugin.getHistory(node) || [];
-    if (action.label === "revert") {
-      if (history.length > 0 && history[0].version === void 0) {
-        history.shift();
-      }
-      if (history.length > 0) {
-        history[0].version = void 0;
-      }
-    } else {
-      const commitMessage = useCommitMessage ? message.commitMessage : void 0;
-      if (history.length > 0 && !history[0].version) {
-        history[0].version = new Version(version);
-        history[0].commitMessage = commitMessage;
-      } else {
-        history.unshift({
-          version: new Version(version),
-          commitMessage
-        });
-      }
-    }
-    Plugin.setHistory(node, history);
-  }
-  if (saveToFigmaVersionHistory && version !== "" && ["major", "minor", "patch", "rfc", "release", "initial"].includes(action.label)) {
-    const commitMessage = message.commitMessage || void 0;
-    const name = node.name;
-    const titleParts = name.split("@");
-    let title = name;
-    if (Version.pattern.test(titleParts.slice(-1)[0])) {
-      title = titleParts.slice(0, -1).join("@");
-    }
-    title = `${title}@${version.toString()}`;
-    void figma.saveVersionHistoryAsync(title, commitMessage);
-  }
-}
-var selectionChange = () => {
-  updateUi(true);
-};
-figma.on("selectionchange", selectionChange);
-figma.on("close", () => {
-  figma.off("selectionchange", selectionChange);
-});
-figma.ui.onmessage = (message) => {
-  console.log(message);
-  switch (message.type) {
-    case "settings": {
-      const settings = __spreadValues({
-        useRfc: false,
-        useCommitMessage: false,
-        updateName: false,
-        saveToFigmaVersionHistory: false
-      }, Plugin.getConfig("settings"));
-      figma.ui.postMessage({
-        type: "settings",
-        settings
-      });
-      break;
-    }
-    case "updateSettings": {
-      updateSettings(message);
-      updateUi();
-      break;
-    }
-    case "updateVersion": {
-      updateVersion(message);
-      updateUi();
-      break;
-    }
-    case "updateCommitMessage": {
-      updateCommitMessage(message);
-      break;
-    }
-    case "resize": {
-      resizeUi(message.width, message.height);
-      break;
-    }
-    default: {
-      break;
-    }
-  }
-};
-function updateUi(hasSelectionChanged = false) {
-  const page = figma.currentPage;
-  const selection = page.selection;
-  let message = null;
-  const uiOptions = {};
-  if (selection.length > 0) {
-    if (selection.length === 1) {
-      const settings = Plugin.getConfig("settings") || {};
-      const node = selection[0];
-      const version = Plugin.getVersion(node);
-      const history = Plugin.getHistory(node);
-      const actions = deriveActions(node, settings, version);
-      uiOptions.title = node.name;
-      message = {
-        type: "actions",
-        data: actions,
-        history
-      };
-    } else {
-      const selectedNodes = selection.map((node) => {
-        const versionValue = Plugin.getNode(node, "version");
-        const version = versionValue ? new Version(versionValue).toString() : null;
-        return {
-          id: node.id,
-          name: node.name,
-          version
-        };
-      });
-      message = {
-        type: "list",
-        data: selectedNodes
-      };
-    }
-    figma.showUI(ui_default, uiOptions);
-    figma.ui.postMessage(message);
-  } else {
-    figma.skipInvisibleInstanceChildren = true;
-    const versionedNodes = figma.root.findAll((node) => versionRegex.test(node.name) || Plugin.getVersion(node) !== void 0).map((node) => {
-      const version = Plugin.getVersion(node) || null;
-      return {
-        id: node.id,
-        name: node.name,
-        version
-      };
-    });
-    figma.skipInvisibleInstanceChildren = false;
-    message = {
-      type: "list",
-      data: versionedNodes
-    };
-    figma.ui.postMessage(message);
-  }
-}
-if (figma.editorType === "figma") {
-  updateUi();
-} else {
-  figma.closePlugin("Semantic Versioning is currently only running in Figma Design.");
-}
-//# sourceMappingURL=code.js.map
+`;var b=/@(\d+\.\d+\.\d+(-rfc\.\d+)?)$/im;function L(a,e,t){let r=_(a),n=[{version:t?t.toString():null,label:"keep"}];if(t){let u=t.deriveOptions(e.useRfc).map(f=>{let p=new l(f),k=t.elevatedLevel(p)||"keep";return new d(a,p,k).toObject()});n.push(...u)}else{let u=new l(void 0,e.useRfc),f=new d(a,u,"initial");n.push(f.toObject())}let c=!r!=!t,s=Boolean(r)&&Boolean(t)&&!t.equals(r);e.updateName&&(c||s)&&n.push({nodeId:a.id,version:r?r.toString():void 0,label:"fromName"},{nodeId:a.id,label:"toName",version:t?t.toString():void 0,nameVersion:r?r.toString():void 0});let o=i.getHistory(a)||[];return o.length>1&&n.push({nodeId:a.id,version:o[1].version.toString(),commitMessage:o[1].commitMessage,label:"revert"}),n.sort((u,f)=>d.getIndex(u.label)-d.getIndex(f.label)),n}function _(a){let e=a.name,t=b.exec(e);if(t)return new l(t[1])}function C(a,e){let t=a.name,r=_(a)!==void 0;if(e===void 0||e==="")a.name=t.replace(b,"");else{let n=`@${e.toString()}`;a.name=r?t.replace(b,n):`${t}${n}`}}function O(a){let e=i.getConfig("settings")||{},t=g(g({},e),a.settings);i.setConfig("settings",t)}function E(a){let e=figma.getNodeById(a.nodeId),t=a.commitMessage,r=i.getHistory(e)||[];r.length>0&&!r[0].version?r[0].commitMessage=t:r.unshift({commitMessage:t}),i.setHistory(e,r)}function F(a=300,e=600){let r=e>800?800:e;figma.ui.resize(300,r)}function M(a){let e=a.action,t=figma.getNodeById(e.nodeId),{updateName:r,useCommitMessage:n,saveToFigmaVersionHistory:c}=i.getConfig("settings")||{},s=e.version?new l(e.version):"";if(i.setVersion(t,s),r&&C(t,s),s!==""){let o=i.getHistory(t)||[];if(e.label==="revert")o.length>0&&o[0].version===void 0&&o.shift(),o.length>0&&(o[0].version=void 0);else{let u=n?a.commitMessage:void 0;o.length>0&&!o[0].version?(o[0].version=new l(s),o[0].commitMessage=u):o.unshift({version:new l(s),commitMessage:u})}i.setHistory(t,o)}if(c&&s!==""&&["major","minor","patch","rfc","release","initial"].includes(e.label)){let o=a.commitMessage||void 0,u=t.name,f=u.split("@"),p=u;l.pattern.test(f.slice(-1)[0])&&(p=f.slice(0,-1).join("@")),p=`${p}@${s.toString()}`,figma.saveVersionHistoryAsync(p,o)}}var x=()=>{h(!0)};figma.on("selectionchange",x);figma.on("close",()=>{figma.off("selectionchange",x)});figma.ui.onmessage=a=>{switch(a.type){case"settings":{let e=g({useRfc:!1,useCommitMessage:!1,updateName:!1,saveToFigmaVersionHistory:!1},i.getConfig("settings"));figma.ui.postMessage({type:"settings",settings:e});break}case"updateSettings":{O(a),h();break}case"updateVersion":{M(a),h();break}case"updateCommitMessage":{E(a);break}case"resize":{F(a.width,a.height);break}case"select":{let e=figma.getNodeById(a.nodeId);if(e!==null){let t=figma.currentPage;t.selection=[e],h()}break}default:break}};function h(a=!1){let t=figma.currentPage.selection,r=null,n={};if(t.length>0)if(t.length===1){let c=i.getConfig("settings")||{},s=t[0],o=i.getVersion(s),u=i.getHistory(s),f=L(s,c,o);n.title=s.name,r={type:"actions",data:f,history:u}}else{let c=t.map(s=>{let o=i.getNode(s,"version"),u=o?new l(o).toString():null;return{id:s.id,name:s.name,version:u}});n.title=`${t.length} selected Nodes`,r={type:"list",data:c}}else{figma.skipInvisibleInstanceChildren=!0;let c=figma.root.findAll(s=>b.test(s.name)||i.getVersion(s)!==void 0).map(s=>{let o=i.getNode(s,"version"),u=o?new l(o).toString():null;return{id:s.id,name:s.name,version:u}});figma.skipInvisibleInstanceChildren=!1,n.title=`${c.length} versioned Nodes`,r={type:"list",data:c}}figma.showUI(m,n),figma.ui.postMessage(r)}figma.editorType==="figma"?h():figma.closePlugin("Semantic Versioning is currently only running in Figma Design.");

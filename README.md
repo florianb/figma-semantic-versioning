@@ -4,6 +4,9 @@ Simplified [Semantic Versioning][semver] for your Figma Nodes without external d
 
 # Recent Changes
 
+- Add list overview over all versioned nodes if no node is selected
+- Make nodes in list views clickable to change selection quickly
+- Improve list rendering of nodes
 - Major ui changes to allow the change of selection while the plugin is opened.
 - Add support for save of "Figma document version" on version change.
 - Add support for plugin-internal version history enabling a "revert".

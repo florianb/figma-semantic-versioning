@@ -74,7 +74,6 @@ export default abstract class Plugin {
 			commitMessage: h?.commitMessage,
 		}));
 
-		console.log(stringifiedHistory, history);
 		Plugin.setNode(node, 'history', stringifiedHistory);
 	}
 

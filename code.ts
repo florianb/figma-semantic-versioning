@@ -129,7 +129,10 @@ function updateCommitMessage(message: any): void {
 }
 
 function resizeUi(_width = 300, height = 600) {
-	figma.ui.resize(300, height);
+	const maxHeight = 800;
+	const newHeight = height > maxHeight ? maxHeight : height;
+
+	figma.ui.resize(300, newHeight);
 }
 
 function updateVersion(message: any): void {
@@ -200,7 +203,6 @@ figma.on('close', () => {
 
 // eslint-disable-next-line unicorn/prefer-add-event-listener
 figma.ui.onmessage = message => {
-	console.log(message);
 	switch (message.type) {
 		case 'settings': {
 			const settings: SettingsObject = {
@@ -237,6 +239,19 @@ figma.ui.onmessage = message => {
 
 		case 'resize': {
 			resizeUi(message.width, message.height);
+			break;
+		}
+
+		case 'select': {
+			const node = figma.getNodeById(message.nodeId);
+
+			if (node !== null) {
+				const page = figma.currentPage;
+
+				page.selection = [node as SectionNode];
+				updateUi();
+			}
+
 			break;
 		}
 
@@ -278,6 +293,7 @@ function updateUi(hasSelectionChanged = false) {
 				};
 			});
 
+			uiOptions.title = `${selection.length} selected Nodes`;
 			message = {
 				type: 'list',
 				data: selectedNodes,
@@ -290,7 +306,8 @@ function updateUi(hasSelectionChanged = false) {
 				.findAll(node => versionRegex.test(node.name)
 					|| Plugin.getVersion(node) !== undefined)
 				.map(node => {
-					const version = Plugin.getVersion(node) || null;
+					const versionValue = Plugin.getNode(node, 'version') as string | undefined;
+					const version = versionValue ? (new Version(versionValue)).toString() : null;
 
 					return {
 						id: node.id,
@@ -301,6 +318,7 @@ function updateUi(hasSelectionChanged = false) {
 
 		figma.skipInvisibleInstanceChildren = false;
 
+		uiOptions.title = `${versionedNodes.length} versioned Nodes`;
 		message = {
 			type: 'list',
 			data: versionedNodes,
