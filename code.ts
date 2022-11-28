@@ -129,7 +129,7 @@ function updateCommitMessage(message: any): void {
 }
 
 function resizeUi(_width = 300, height = 600) {
-	const maxHeight = 800;
+	const maxHeight = Math.floor(figma.viewport.bounds.height * figma.viewport.zoom.valueOf() * 0.681);
 	const newHeight = height > maxHeight ? maxHeight : height;
 
 	figma.ui.resize(300, newHeight);
@@ -196,6 +196,7 @@ const selectionChange = (): void => {
 	updateUi(true);
 };
 
+figma.on('currentpagechange', selectionChange);
 figma.on('selectionchange', selectionChange);
 figma.on('close', () => {
 	figma.off('selectionchange', selectionChange);
@@ -302,7 +303,7 @@ function updateUi(hasSelectionChanged = false) {
 	} else {
 		figma.skipInvisibleInstanceChildren = true;
 		const versionedNodes
-			= figma.root
+			= figma.currentPage
 				.findAll(node => versionRegex.test(node.name)
 					|| Plugin.getVersion(node) !== undefined)
 				.map(node => {
@@ -315,6 +316,8 @@ function updateUi(hasSelectionChanged = false) {
 						version,
 					};
 				});
+
+		versionedNodes.sort((a, b) => a.name.localeCompare(b.name));
 
 		figma.skipInvisibleInstanceChildren = false;
 

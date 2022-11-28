@@ -20,7 +20,7 @@
 </script>
 
 <details>
-	<summary>Documentwide Settings</summary>
+	<summary>Pagewide Settings</summary>
 
 	{#if useRfc !== null}
 		<div>
