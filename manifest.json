@@ -7,5 +7,10 @@
     "figma"
   ],
   "ui": "ui.html",
-  "permissions": []
+  "permissions": [],
+  "networkAccess": {
+    "allowedDomains": [
+      "none"
+    ]
+  }
 }
